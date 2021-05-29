@@ -49,7 +49,7 @@ exports.makeAppoinment = (req, res) => {
         customer: req.body.customer,
     });
     appointment.save().then(createdAppoinment => {
-        res.status(201).json(createdAppoinment)
+        res.status(201).json({ message: 'success', data: createdAppoinment })
     }).catch(err => {
         res.status(500).json({
             error: err,

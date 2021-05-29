@@ -7,6 +7,7 @@ const productsRouter = require('./routes/products');
 const categoryRouter = require('./routes/categories');
 const userRouter = require('./routes/users');
 const appointmentRouter = require('./routes/appointment');
+const ticketRouter = require('./routes/tickets');
 
 const app = express();
 
@@ -23,10 +24,11 @@ app.use(morgan('tiny'));
 // app.use()
 
 //Routers
-app.use(`${api}/products`, productsRouter)
-app.use(`${api}/categories`, categoryRouter)
-app.use(`${api}/users`, userRouter)
-app.use(`${api}/appointments`, appointmentRouter)
+app.use(`${api}/products`, productsRouter);
+app.use(`${api}/categories`, categoryRouter);
+app.use(`${api}/users`, userRouter);
+app.use(`${api}/appointments`, appointmentRouter);
+app.use(`${api}/tickets`, ticketRouter);
 
 //Database Connection
 mongoose.connect(process.env.CONNECTION_STRING, { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true })
@@ -52,8 +54,8 @@ app.use((error, req, res, next) => {
     res.status(error.status || 500);
     res.json({
         error: {
-            message: error.message,
-            description: "Significant Error",
+            error: error.message,
+            message: "Significant Error",
         },
     });
 });

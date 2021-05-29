@@ -62,14 +62,14 @@ exports.search = (req, res) => {
 };
 
 exports.deleteUser = (req, res) => {
-    User.remove({ _id: req.params.id }).exec().then(result => {
+    User.deleteOne({ _id: req.params.id }).exec().then(result => {
         res.status(200).json({ success: true, message: 'User removed' });
     }).catch(err => {
         res.status(500).json({ success: false, message: 'Failed to delete user', error: err });
     })
 };
 
-exports.login = (req, res, next) => {
+exports.login = (req, res) => {
     User.findOne({ phone: req.body.phone })
         .exec()
         .then((user) => {
@@ -79,7 +79,7 @@ exports.login = (req, res, next) => {
                     if (err) {
                         return res.status(401).json({ success: false, message: "Authorization failed" });
                     } else if (result) {
-                        jwt.sign({ phone: user.phone, userId: user.id },
+                        jwt.sign({ phone: user.phone, userId: user.id, userType: user.userType },
                             process.env.JWT_KEY, {
                                 expiresIn: "6h",
                             },
@@ -103,5 +103,20 @@ exports.login = (req, res, next) => {
         })
         .catch((err) => {
             res.status(500).json({ success: false, error: err });
+        });
+};
+
+exports.updateUser = (req, res) => {
+    const updateOps = {};
+    for (const [objKey, value] of Object.entries(req.body)) {
+        updateOps[objKey] = value;
+    }
+    User.findByIdAndUpdate({ _id: req.params.id }, { $set: updateOps }, { new: true })
+        .exec()
+        .then((doc) => {
+            res.status(200).json({ success: true, data: doc });
+        })
+        .catch((err) => {
+            res.status(500).json({ success: false, message: "error updating the category", error: err });
         });
 };

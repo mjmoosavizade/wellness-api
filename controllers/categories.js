@@ -76,7 +76,7 @@ exports.updateCategory = (req, res) => {
     for (const [objKey, value] of Object.entries(req.body)) {
         updateOps[objKey] = value;
     }
-    Category.findByIdAndUpdate({ _id: req.params.id }, { $set: updateOps })
+    Category.findByIdAndUpdate({ _id: req.params.id }, { $set: updateOps }, { new: true })
         .exec()
         .then((doc) => {
             res.status(200).json({ success: true, data: doc });

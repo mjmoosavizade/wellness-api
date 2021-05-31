@@ -26,7 +26,7 @@ exports.getOneAppointment = (req, res) => {
 
 exports.getAllAppointments = (req, res) => {
     Appointment.find().then(appointmentList => {
-        if (!appointmentList) {
+        if (appointmentList < 1) {
             res.status(404).json({ success: false, message: 'No Content' });
         } else {
             res.status(200).json({ success: true, data: appointmentList });

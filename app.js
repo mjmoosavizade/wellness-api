@@ -8,6 +8,9 @@ const categoryRouter = require('./routes/categories');
 const userRouter = require('./routes/users');
 const appointmentRouter = require('./routes/appointment');
 const ticketRouter = require('./routes/tickets');
+const quizRouter = require('./routes/quizzes');
+const quizQuestionsRouter = require('./routes/quizQuestions');
+const quizresultsRouter = require('./routes/quizResults');
 
 const app = express();
 
@@ -29,6 +32,9 @@ app.use(`${api}/categories`, categoryRouter);
 app.use(`${api}/users`, userRouter);
 app.use(`${api}/appointments`, appointmentRouter);
 app.use(`${api}/tickets`, ticketRouter);
+app.use(`${api}/quizzes`, quizRouter);
+app.use(`${api}/quiz/questions`, quizQuestionsRouter);
+app.use(`${api}/quiz/results`, quizresultsRouter);
 
 //Database Connection
 mongoose.connect(process.env.CONNECTION_STRING, { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true })

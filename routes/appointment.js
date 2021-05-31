@@ -4,14 +4,14 @@ const appointmentController = require("../controllers/appointments");
 const checkAuth = require('../middleware/chcek-auth');
 
 
-router.get(`/`, appointmentController.getAllAppointments);
+router.get(`/`, checkAuth, appointmentController.getAllAppointments);
 
-router.get(`/:id`, appointmentController.getOneAppointment);
+router.get(`/:id`, checkAuth, appointmentController.getOneAppointment);
 
-router.post(`/`, appointmentController.makeAppoinment);
+router.post(`/`, checkAuth, appointmentController.makeAppoinment);
 
 router.delete('/:id', checkAuth, appointmentController.deleteAppointment);
 
-router.put('/:id', appointmentController.updateAppointment);
+router.put('/:id', checkAuth, appointmentController.updateAppointment);
 
 module.exports = router;

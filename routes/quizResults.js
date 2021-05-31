@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const quizResultsController = require('../controllers/quizResults');
 
-router.post('/', quizResultsController.createResult);
+router.post('/', checkAuth, quizResultsController.createResult);
 
-router.get('/', quizResultsController.getResults);
+router.get('/', checkAuth, quizResultsController.getResults);
 
-router.get('/:user', quizResultsController.getUserResults);
+router.get('/:user', checkAuth, quizResultsController.getUserResults);
 
 module.exports = router;

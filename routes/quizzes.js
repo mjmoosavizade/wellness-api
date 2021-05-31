@@ -3,12 +3,12 @@ const router = express.Router();
 const quizController = require('../controllers/quizzes');
 
 
-router.post('/', quizController.createQuiz);
+router.post('/', checkAuth, quizController.createQuiz);
 
-router.get('/', quizController.getAllCategories);
+router.get('/', checkAuth, quizController.getAllCategories);
 
-router.get('/:id', quizController.getOneCategories);
+router.get('/:id', checkAuth, quizController.getOneCategories);
 
-router.patch('/:id', quizController.updateQuiz);
+router.patch('/:id', checkAuth, quizController.updateQuiz);
 
 module.exports = router;

@@ -30,14 +30,14 @@ const upload = multer({
 });
 
 
-router.post("/", upload.single('resultFile'), testResultsController.createTestResult);
+router.post("/", checkAuth, upload.single('resultFile'), testResultsController.createTestResult);
 
-router.get("/", testResultsController.getAllResults);
+router.get("/", checkAuth, testResultsController.getAllResults);
 
-router.get("/:id", testResultsController.getOneResults);
+router.get("/:id", checkAuth, testResultsController.getOneResults);
 
-router.delete("/:id", testResultsController.deleteResult);
+router.delete("/:id", checkAuth, testResultsController.deleteResult);
 
-router.patch("/:id", upload.single('resultFile'), testResultsController.updateResult);
+router.patch("/:id", checkAuth, upload.single('resultFile'), testResultsController.updateResult);
 
 module.exports = router;

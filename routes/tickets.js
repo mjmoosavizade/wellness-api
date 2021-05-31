@@ -2,14 +2,14 @@ const express = require('express');
 const router = express.Router();
 const ticketController = require('../controllers/tickets');
 
-router.get('/', ticketController.getAllTickets);
+router.get('/', checkAuth, ticketController.getAllTickets);
 
-router.get('/:id', ticketController.getOneTickets);
+router.get('/:id', checkAuth, ticketController.getOneTickets);
 
-router.post('/', ticketController.createTicket);
+router.post('/', checkAuth, ticketController.createTicket);
 
-router.patch('/:id', ticketController.updateTicket);
+router.patch('/:id', checkAuth, ticketController.updateTicket);
 
-router.post('/message', ticketController.sendMessage);
+router.post('/message', checkAuth, ticketController.sendMessage);
 
 module.exports = router;

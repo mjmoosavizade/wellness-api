@@ -126,3 +126,6 @@ dist/
 # Temporary folders
 tmp/
 temp/
+
+# Upload folder
+uplodas/

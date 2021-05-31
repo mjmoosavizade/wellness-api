@@ -11,6 +11,7 @@ const ticketRouter = require('./routes/tickets');
 const quizRouter = require('./routes/quizzes');
 const quizQuestionsRouter = require('./routes/quizQuestions');
 const quizresultsRouter = require('./routes/quizResults');
+const testResultsRouter = require('./routes/testResults');
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use(`${api}/tickets`, ticketRouter);
 app.use(`${api}/quizzes`, quizRouter);
 app.use(`${api}/quiz/questions`, quizQuestionsRouter);
 app.use(`${api}/quiz/results`, quizresultsRouter);
+app.use(`${api}/test-results`, testResultsRouter);
 
 //Database Connection
 mongoose.connect(process.env.CONNECTION_STRING, { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true })

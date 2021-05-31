@@ -13,7 +13,7 @@ module.exports = (req, res, next) => {
             .then((doc) => {
                 console.log(doc)
                 if (doc) {
-                    if (doc.userType === 'admin' || doc.userType === 'manager') {
+                    if (doc.userType === 'manager' || doc.userType === 'specialist') {
                         next();
                     } else {
                         return res.status(401).json({ success: false, message: "Not authorized" });

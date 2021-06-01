@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const ticketController = require('../controllers/tickets');
+const checkAuth = require('../middleware/chcek-auth');
 
 router.get('/', checkAuth, ticketController.getAllTickets);
 

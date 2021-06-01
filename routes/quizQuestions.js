@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const quizQuestionsController = require('../controllers/quizQuestions');
+const checkAuth = require('../middleware/chcek-auth');
 
 router.post('/', checkAuth, quizQuestionsController.createQuiestion);
 

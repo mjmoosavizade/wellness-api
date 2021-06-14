@@ -16,5 +16,9 @@ router.post('/login', userController.login);
 
 router.patch('/:id', checkAuth, userController.updateUser);
 
+router.post('/activation', checkAuth, userController.sendActivationCode);
+
+router.post('/activate', checkAuth, userController.activateUser);
+
 
 module.exports = router;

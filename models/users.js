@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const ttl = require('mongoose-ttl');
 
 const userRole = ['admin', 'user', 'specialist', ]
 const gender = ['MALE', 'FEMALE', 'OTHER', ]
@@ -8,6 +9,7 @@ const UserSchema = new mongoose.Schema({
     lastname: { type: String, required: false },
     email: { type: String, required: false, },
     passwordHash: { type: String, required: true },
+    jobTitle: { type: String, },
     phone: {
         type: String,
         required: true,
@@ -16,7 +18,18 @@ const UserSchema = new mongoose.Schema({
     },
     userType: { type: String, enum: userRole, default: 'user' },
     gender: { type: String, enum: gender },
-
+    address: { type: String, },
+    landPhone: { type: String },
+    active: { type: Boolean, default: false },
+    authCode: { type: Number, default: Math.floor(Math.random() * (999999 - 100000)) + 100000 }
 });
 
+const ActivationCodeSchema = new mongoose.Schema({
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    dateCreated: { type: Date, default: Date.now, expires: '10s' },
+    authCode: { type: Number, default: Math.floor(Math.random() * (999999 - 100000)) + 100000 }
+});
+ActivationCodeSchema.plugin(ttl, { ttl: 60000 * 2, interval: 5000 });
+
 exports.User = mongoose.model('User', UserSchema);
+exports.ActivationCode = mongoose.model('ActivationCode', ActivationCodeSchema);

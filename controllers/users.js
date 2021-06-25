@@ -79,6 +79,7 @@ exports.deleteUser = (req, res) => {
 
 exports.login = (req, res) => {
     User.findOne({ phone: req.body.phone })
+        .select("active _id passwordHash phone")
         .exec()
         .then((user) => {
             if (user) {
@@ -97,7 +98,7 @@ exports.login = (req, res) => {
                                 } else if (token) {
                                     return res
                                         .status(200)
-                                        .json({ success: true, message: "Authorization succeeded", token: token });
+                                        .json({ success: true, message: "Authorization succeeded", token: token, user: user });
                                 }
                             }
                         );

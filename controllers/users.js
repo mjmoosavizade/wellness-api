@@ -173,7 +173,7 @@ exports.sendActivationCode = (req, res) => {
         })
 
 
-}
+};
 
 exports.activateUser = (req, res) => {
     ActivationCode.find({ user: req.body.userId })
@@ -195,4 +195,15 @@ exports.activateUser = (req, res) => {
         .catch(err => {
             res.status(500).json({ success: false, message: "error activating the user", error: err })
         })
-}
+};
+
+exports.getOneUser = (req, res) => {
+    User.findById(req.userData.userId)
+        .exec()
+        .then(result => {
+            res.status(200).json({ success: true, data: result });
+        })
+        .catch(err => {
+            res.status(500).json({ success: false, message: "error getting the user", error: err })
+        })
+};

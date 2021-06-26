@@ -20,5 +20,7 @@ router.post('/activation', userController.sendActivationCode);
 
 router.post('/activate', userController.activateUser);
 
+router.get('/getOne', checkAuth, userController.getOneUser);
+
 
 module.exports = router;

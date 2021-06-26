@@ -176,11 +176,11 @@ exports.sendActivationCode = (req, res) => {
 }
 
 exports.activateUser = (req, res) => {
-    ActivationCode.find({ user: req.userData.userId })
+    ActivationCode.find({ user: req.body.userId })
         .exec()
         .then(result => {
             if (req.body.avtivationCode == result.authCode) {
-                User.findByIdAndUpdate({ _id: req.userData.userId }, { active: true }, { new: true })
+                User.findByIdAndUpdate({ _id: req.body.userId }, { active: true }, { new: true })
                     .exec()
                     .then(result => {
                         res.status(201).json({ success: true, message: "user activated", data: result });

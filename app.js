@@ -50,8 +50,8 @@ mongoose.set('useCreateIndex', true);
 
 
 //Server    
-app.listen(3000, () => {
-    console.log('Server running localhost:3000')
+app.listen(4000, () => {
+    console.log('Server running localhost:4000')
 })
 
 process.on('warning', (warning) => {

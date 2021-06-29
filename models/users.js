@@ -21,15 +21,22 @@ const UserSchema = new mongoose.Schema({
     address: { type: String, },
     landPhone: { type: String },
     active: { type: Boolean, default: false },
-    authCode: { type: Number, default: Math.floor(Math.random() * (999999 - 100000)) + 100000 }
+    dateCreated: { type: Date, default: Date.now },
 });
 
 const ActivationCodeSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     dateCreated: { type: Date, default: Date.now, expires: '10s' },
-    authCode: { type: Number, default: Math.floor(Math.random() * (999999 - 100000)) + 100000 }
+    authCode: { type: Number, }
 });
 ActivationCodeSchema.plugin(ttl, { ttl: 60000 * 2, interval: 5000 });
 
+const ForgotPassSchema = new mongoose.Schema({
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    authCode: { type: Number, },
+});
+
+
 exports.User = mongoose.model('User', UserSchema);
 exports.ActivationCode = mongoose.model('ActivationCode', ActivationCodeSchema);
+exports.ForgotPass = mongoose.model('ForgotPass', ForgotPassSchema);

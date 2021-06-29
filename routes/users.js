@@ -14,13 +14,21 @@ router.delete('/:id', checkAuth, checkAdmin, userController.deleteUser);
 
 router.post('/login', userController.login);
 
-router.patch('/:id', checkAuth, userController.updateUser);
+router.patch('/updateMyProfile', checkAuth, userController.updateMyProfile);
+
+router.patch('/updatePassword', checkAuth, userController.updatePassword);
+
+router.patch('/:id', checkAuth, checkAdmin, userController.updateUser);
 
 router.post('/activation', userController.sendActivationCode);
 
 router.post('/activate', userController.activateUser);
 
-router.get('/getOne', checkAuth, userController.getOneUser);
+router.get('/getMyProfile', checkAuth, userController.getMyProfile);
+
+router.post('/forgotPass', checkAuth, userController.forgotPassword);
+
+router.post('/changeForgottenPass', checkAuth, userController.changeForgottenPass);
 
 
 module.exports = router;

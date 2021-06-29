@@ -1,4 +1,4 @@
-const { User, ActivationCode } = require('../models/users');
+const { User, ActivationCode, ForgotPass } = require('../models/users');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -19,13 +19,8 @@ exports.signup = (req, res) => {
                         return res.status(500).json({ succes: false, message: 'Error hashing the password', error: err });
                     } else {
                         const user = new User({
-                            firstname: req.body.firstname,
-                            lastname: req.body.lastname,
-                            email: req.body.email,
                             passwordHash: hash,
                             phone: req.body.phone,
-                            userType: req.body.userType,
-                            gender: req.body.gender,
                         });
                         user.save().then(doc => {
                                 console.log(doc.phone)
@@ -148,9 +143,9 @@ exports.sendActivationCode = (req, res) => {
                         console.log(user.active)
                         if (user.active == false) {
                             const activationCode = new ActivationCode({
-                                user: req.body.userId
+                                user: req.body.userId,
+                                authCode: Math.floor(Math.random() * (999999 - 100000)) + 100000
                             });
-                            console.log("test")
                             activationCode
                                 .save()
                                 .then(result => {
@@ -164,6 +159,8 @@ exports.sendActivationCode = (req, res) => {
                                 .catch(err => {
                                     res.status(500).json({ success: false, message: "error sending activation code", error: err });
                                 })
+                        } else {
+                            res.status(409).json({ success: false, message: "User already activated" });
                         }
                     })
             }
@@ -171,8 +168,6 @@ exports.sendActivationCode = (req, res) => {
         .catch(err => {
             res.status(500).json({ success: false, message: "error sending activation code", error: err });
         })
-
-
 };
 
 exports.activateUser = (req, res) => {
@@ -197,7 +192,7 @@ exports.activateUser = (req, res) => {
         })
 };
 
-exports.getOneUser = (req, res) => {
+exports.getMyProfile = (req, res) => {
     User.findById(req.userData.userId)
         .exec()
         .then(result => {
@@ -207,3 +202,131 @@ exports.getOneUser = (req, res) => {
             res.status(500).json({ success: false, message: "error getting the user", error: err })
         })
 };
+
+exports.updateMyProfile = (req, res) => {
+    const updateOps = {};
+    for (const [objKey, value] of Object.entries(req.body)) {
+        if (objKey != "passwordHash" || objKey != "active" || objKey != "phone")
+            updateOps[objKey] = value;
+    }
+    User.findByIdAndUpdate({ _id: req.userData.userId }, { $set: updateOps }, { new: true })
+        .exec()
+        .then((doc) => {
+            res.status(200).json({ success: true, data: doc });
+        })
+        .catch((err) => {
+            res.status(500).json({ success: false, message: "error updating the profile", error: err });
+        });
+};
+
+exports.updatePassword = (req, res) => {
+    User.findOne({ _id: req.userData.userId })
+        .select("active _id passwordHash phone")
+        .exec()
+        .then((user) => {
+            if (user) {
+                bcrypt.compare(req.body.oldPassword, user.passwordHash, (err, result) => {
+                    console.log(result);
+                    if (err) {
+                        return res.status(401).json({ success: false, message: "Authorization failed" });
+                    } else if (result) {
+                        bcrypt.hash(req.body.password, 10, (err, hash) => {
+                            if (err) {
+                                return res.status(500).json({ succes: false, message: 'Error hashing the password', error: err });
+                            } else {
+                                const pass = {
+                                    passwordHash: hash,
+                                };
+                                User.findByIdAndUpdate({ _id: req.userData.userId }, { $set: pass }, { new: true })
+                                    .exec()
+                                    .then((doc) => {
+                                        res.status(200).json({ success: true, data: doc });
+                                    })
+                                    .catch((err) => {
+                                        res.status(500).json({ success: false, message: "error updating the password", error: err });
+                                    });
+                            }
+                        })
+                    } else {
+                        return res.status(401).json({ success: false, message: "Authorization failed" });
+                    }
+                });
+            } else {
+                res.status(401).json({ success: false, message: "Authorization failed" });
+            }
+        })
+        .catch((err) => {
+            res.status(500).json({ success: false, error: err });
+        });
+}
+
+exports.forgotPassword = (req, res) => {
+    console.log(req.userData)
+    ForgotPass.find({ user: req.userData.userId })
+        .exec()
+        .then(result => {
+            if (result.length >= 1) {
+                //send prev code
+            } else {
+                User.findOne({ _id: req.userData.userId })
+                    .select("active phone")
+                    .exec()
+                    .then((user) => {
+                        console.log(user.active)
+                        const forgotenpass = new ForgotPass({
+                            user: req.userData.userId,
+                            authCode: Math.floor(Math.random() * (999999 - 100000)) + 100000
+                        });
+                        forgotenpass
+                            .save()
+                            .then(result => {
+                                // sms.send({
+                                //     message: "به مجموعه ی همیار ولنس خوش آمدید \n کد تایید شما: " + result.authCode,
+                                //     receptor: user.phone,
+                                //     linenumber: "10008566"
+                                // });
+                                res.status(201).json({ success: true, message: "message sent" });
+                            })
+                            .catch(err => {
+                                res.status(500).json({ success: false, message: "error sending activation code", error: err });
+                            })
+
+                    })
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ success: false, message: "error sending activation code", error: err });
+        })
+}
+
+exports.changeForgottenPass = (req, res) => {
+    ForgotPass.findOne({ user: req.userData.userId })
+        .exec()
+        .then((fp) => {
+            if (fp.authCode == req.body.authCode) {
+                bcrypt.hash(req.body.password, 10, (err, hash) => {
+                    if (err) {
+                        return res.status(500).json({ succes: false, message: 'Error hashing the password', error: err });
+                    } else {
+                        const pass = {
+                            passwordHash: hash,
+                        };
+                        User.findByIdAndUpdate({ _id: req.userData.userId }, { $set: pass }, { new: true })
+                            .exec()
+                            .then((doc) => {
+                                res.status(200).json({ success: true, data: doc });
+                            })
+                            .catch((err) => {
+                                res.status(500).json({ success: false, message: "error updating the password", error: err });
+                            });
+                        ForgotPass.deleteOne({ _id: fp._id }).exec().then().catch(err => console.log(err))
+                    }
+                })
+            } else {
+                res.status(401).json({ success: false, message: "AuthCode is not correct" });
+            }
+        })
+        .catch((err) => {
+            res.status(500).json({ success: false, error: err });
+        });
+}

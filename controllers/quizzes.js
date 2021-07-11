@@ -3,11 +3,20 @@ const { QuizQuestion } = require('../models/quizQuestions');
 const ObjectId = require('mongoose').Types.ObjectId;
 
 exports.createQuiz = (req, res) => {
-    const createObj = {};
-    for (const [objKey, value] of Object.entries(req.body)) {
-        createObj[objKey] = value;
-    }
-    const quiz = new Quiz(createObj);
+    // const createObj = {};
+    // for (const [objKey, value] of Object.entries(req.body)) {
+    //     createObj[objKey] = value;
+    // }
+    // const quiz = new Quiz(createObj);
+    const quiz = new Quiz({
+        quizCategory: req.body.quizCategory,
+        quizTitle: req.body.quizTitle,
+        quizIcon: req.file.quizIcon.path,
+        quizAudio: req.file.quizAudio.path,
+        quizDimensio: req.body.quizDimensio,
+        quizDescript: req.body.quizDescript,
+        active: req.body.active,
+    })
     quiz.save().then(result => {
         return res.status(201).json({ success: true, data: result })
     }).catch(err => {

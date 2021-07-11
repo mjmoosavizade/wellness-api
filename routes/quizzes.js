@@ -3,10 +3,13 @@ const router = express.Router();
 const quizController = require('../controllers/quizzes');
 const checkAuth = require('../middleware/chcek-auth');
 const multer = require('multer');
+const fs = require('fs');
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
-        cb(null, 'uploads/quizzes');
+        fs.mkdir('./uploads/quizzes', (err) => {
+            cb(null, './uploads/quizzes');
+        });
     },
     filename: function(req, file, cb) {
         cb(null, Date.now() + file.originalname);
@@ -14,7 +17,6 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-    // reject a file
     if (file.mimetype === 'audio/mpeg' || file.mimetype === 'image/png') {
         cb(null, true);
     } else {
@@ -30,15 +32,16 @@ const upload = multer({
     fileFilter: fileFilter
 });
 
-const multipleFiles = upload.fields([{ name: "quizAudio", maxCount: 1 }, { name: "quizIcon", maxCount: 1 }]);
 
 
-router.post('/', checkAuth, multipleFiles, quizController.createQuiz);
+router.post('/', checkAuth, upload.fields([{ name: 'quizIcon', maxCount: 1 }, { name: 'quizAudio', maxCount: 1 }]), quizController.createQuiz);
 
 router.get('/', checkAuth, quizController.getAllCategories);
 
+router.get('/dimension/:quizDimension', checkAuth, quizController.getQuizzesInDiemnsion);
+
 router.get('/:id', checkAuth, quizController.getOneCategories);
 
-router.patch('/:id', multipleFiles, quizController.updateQuiz);
+router.patch('/:id', upload.fields([{ name: 'quizIcon', maxCount: 1 }, { name: 'quizAudio', maxCount: 1 }]), quizController.updateQuiz);
 
 module.exports = router;

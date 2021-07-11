@@ -3,17 +3,12 @@ const { QuizQuestion } = require('../models/quizQuestions');
 const ObjectId = require('mongoose').Types.ObjectId;
 
 exports.createQuiz = (req, res) => {
-    // const createObj = {};
-    // for (const [objKey, value] of Object.entries(req.body)) {
-    //     createObj[objKey] = value;
-    // }
-    // const quiz = new Quiz(createObj);
     const quiz = new Quiz({
         quizCategory: req.body.quizCategory,
         quizTitle: req.body.quizTitle,
-        quizIcon: req.file.quizIcon.path,
-        quizAudio: req.file.quizAudio.path,
-        quizDimensio: req.body.quizDimensio,
+        quizIcon: req.files.quizIcon[0].path,
+        quizAudio: req.files.quizAudio[0].path,
+        quizDimension: req.body.quizDimension,
         quizDescript: req.body.quizDescript,
         active: req.body.active,
     })
@@ -126,3 +121,14 @@ exports.updateQuiz = (req, res) => {
             res.status(500).json({ success: false, message: "error updating the Quiz", error: err });
         });
 };
+
+exports.getQuizzesInDiemnsion = (req, res) => {
+    Quiz.find({ quizDimension: req.params.quizDimension })
+        .exec()
+        .then((result) => {
+            res.status(200).json({ success: true, data: result });
+        })
+        .catch(err => {
+            res.status(500).json({ success: false, error: err, message: "failed getting the Quiz" });
+        })
+}

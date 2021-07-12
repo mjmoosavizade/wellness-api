@@ -1,17 +1,18 @@
 const { QuizResult } = require('../models/quizResults');
+const { QuizQuestion } = require('../models/quizQuestions');
 
 exports.createResult = (req, res) => {
     QuizQuestion.find({ quiz: req.body.quiz })
         .exec()
         .then(questionResults => {
             let score = 0;
-            console.log(req.body.weight)
             questionResults.forEach((element, index) => {
-                score += element.questionWeight * req.body.weight[index]
+                score += element.questionWeight * req.body.answers[index]
             });
             createObj = {
                 quiz: req.body.quiz,
                 user: req.body.user,
+                answers: req.body.answers,
                 score: score / 10,
             }
             const quizResult = new QuizResult(createObj);

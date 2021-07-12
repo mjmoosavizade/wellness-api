@@ -79,6 +79,8 @@ exports.getOneCategories = (req, res) => {
                                 "_id": results[0]._id,
                                 "quizCategory": results[0].quizCategory,
                                 "quizDescription": results[0].quizDescription,
+                                "quizTitle": results[0].quizTitle,
+                                "quizAudio": results[0].quizAudio,
                                 "questions": questionResults,
                             });
 
@@ -89,6 +91,8 @@ exports.getOneCategories = (req, res) => {
                                 "_id": results[0]._id,
                                 "quizCategory": results[0].quizCategory,
                                 "quizDescription": results[0].quizDescription,
+                                "quizTitle": results[0].quizTitle,
+                                "quizAudio": results[0].quizAudio,
                                 "questions": [],
                             });
 

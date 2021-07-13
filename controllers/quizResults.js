@@ -51,7 +51,7 @@ exports.getResults = (req, res) => {
 };
 
 exports.getUserResults = (req, res) => {
-    QuizResult.find({ user: req.params.user })
+    QuizResult.find({ user: req.query.user, quiz: req.query.quiz })
         .populate('quiz')
         .then(results => {
             if (results < 1) {

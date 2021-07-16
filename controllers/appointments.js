@@ -46,7 +46,8 @@ exports.makeAppoinment = (req, res) => {
         date: req.body.date,
         time: req.body.time,
         length: req.body.length,
-        customer: req.body.customer,
+        description: req.body.description,
+        customer: req.userData.userId,
     });
     appointment.save().then(createdAppoinment => {
         res.status(201).json({ message: 'success', data: createdAppoinment })

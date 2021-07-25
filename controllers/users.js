@@ -2,38 +2,38 @@ const { User, ActivationCode, ForgotPass } = require('../models/users');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-// var Kavenegar = require('kavenegar');
-// const api = Kavenegar.KavenegarApi({apikey: '75676D4E386278447765682F39417544755151306949735552684D397863587974634731777433685347553D'});
+var Kavenegar = require('kavenegar');
+const sms = Kavenegar.KavenegarApi({ apikey: '75676D4E386278447765682F39417544755151306949735552684D397863587974634731777433685347553D' });
 const Ghasedak = require("ghasedak");
 
-let sms = new Ghasedak("7f3529b3e37113c426541a10618a6b6e7483b9fd06345988b927765d4bddb0c3");
+// let sms = new Ghasedak("7f3529b3e37113c426541a10618a6b6e7483b9fd06345988b927765d4bddb0c3");
 // let sms = new Ghasedak(process.env.API_URL);
 
 exports.signup = (req, res) => {
     User.find({ phone: req.body.phone }).exec().then(user => {
-            if (user.length >= 1) {
-                return res.status(409).json({ succes: false, message: "User already exist" });
-            } else {
-                bcrypt.hash(req.body.password, 10, (err, hash) => {
-                    if (err) {
-                        return res.status(500).json({ succes: false, message: 'Error hashing the password', error: err });
-                    } else {
-                        const user = new User({
-                            passwordHash: hash,
-                            phone: req.body.phone,
-                        });
-                        user.save().then(doc => {
-                                console.log(doc.phone)
+        if (user.length >= 1) {
+            return res.status(409).json({ succes: false, message: "User already exist" });
+        } else {
+            bcrypt.hash(req.body.password, 10, (err, hash) => {
+                if (err) {
+                    return res.status(500).json({ succes: false, message: 'Error hashing the password', error: err });
+                } else {
+                    const user = new User({
+                        passwordHash: hash,
+                        phone: req.body.phone,
+                    });
+                    user.save().then(doc => {
+                        console.log(doc.phone)
 
-                                res.status(201).json({ success: true, message: 'User created', user: doc });
-                            })
-                            .catch(err => {
-                                res.status(500).json({ success: false, message: 'Signup failure', error: err });
-                            })
-                    }
-                })
-            }
-        })
+                        res.status(201).json({ success: true, message: 'User created', user: doc });
+                    })
+                        .catch(err => {
+                            res.status(500).json({ success: false, message: 'Signup failure', error: err });
+                        })
+                }
+            })
+        }
+    })
         .catch(err => {
             res.status(500).json({ success: false, message: "Error while chekcing for user", error: err })
         });
@@ -88,8 +88,8 @@ exports.login = (req, res) => {
                     } else if (result) {
                         jwt.sign({ phone: user.phone, userId: user.id, userType: user.userType },
                             process.env.JWT_KEY, {
-                                expiresIn: "6h",
-                            },
+                            expiresIn: "6h",
+                        },
                             (err, token) => {
                                 if (err) {
                                     return res.status(500).json({ success: false, message: "Authorization failed", error: err });
@@ -149,16 +149,20 @@ exports.sendActivationCode = (req, res) => {
                             activationCode
                                 .save()
                                 .then(result => {
-                                    // sms.send({
-                                    //     message: "به مجموعه ی همیار ولنس خوش آمدید \n کد تایید شما: " + result.authCode,
-                                    //     receptor: user.phone,
-                                    //     linenumber: "10008566"
-                                    // });
+                                    sms.Send({
+                                        message: "به مجموعه ی همیار ولنس خوش آمدید \n کد تایید شما: " + result.authCode,
+                                        receptor: user.phone,
+                                        linenumber: "10004346"
+                                    },
+                                        function (response, status) {
+                                            console.log(response);
+                                            console.log(status);
+                                        })
                                     res.status(201).json({ success: true, message: "message sent" });
                                 })
-                                .catch(err => {
-                                    res.status(500).json({ success: false, message: "error sending activation code", error: err });
-                                })
+                            // .catch(err => {
+                            //     res.status(500).json({ success: false, message: "error sending activation code", error: err });
+                            // })
                         } else {
                             res.status(409).json({ success: false, message: "User already activated" });
                         }

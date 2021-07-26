@@ -10,6 +10,8 @@ router.get('/', checkAuth, userController.getAllUsers);
 
 router.get('/search', checkAuth, userController.search);
 
+router.get('/checkLogin', checkAuth, userController.checkLogin);
+
 router.delete('/:id', checkAuth, checkAdmin, userController.deleteUser);
 
 router.post('/login', userController.login);

@@ -160,9 +160,9 @@ exports.sendActivationCode = (req, res) => {
                                         })
                                     res.status(201).json({ success: true, message: "message sent" });
                                 })
-                            .catch(err => {
-                                res.status(500).json({ success: false, message: "error sending activation code", error: err });
-                            })
+                                .catch(err => {
+                                    res.status(500).json({ success: false, message: "error sending activation code", error: err });
+                                })
                         } else {
                             res.status(409).json({ success: false, message: "User already activated" });
                         }
@@ -333,4 +333,8 @@ exports.changeForgottenPass = (req, res) => {
         .catch((err) => {
             res.status(500).json({ success: false, error: err });
         });
+}
+
+exports.checkLogin = (req, res) => {
+    return (res.status(200).json({ success: true , msg: "you are logged in"}))
 }

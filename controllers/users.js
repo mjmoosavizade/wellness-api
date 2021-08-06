@@ -88,7 +88,7 @@ exports.login = (req, res) => {
                     } else if (result) {
                         jwt.sign({ phone: user.phone, userId: user.id, userType: user.userType },
                             process.env.JWT_KEY, {
-                            expiresIn: "6h",
+                            expiresIn: "48h",
                         },
                             (err, token) => {
                                 if (err) {

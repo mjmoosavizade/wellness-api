@@ -22,7 +22,13 @@ const api = process.env.API_URL;
 app.use(function (req, res, next) {
 
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8888');
+    // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8888');
+
+    const allowedOrigins = ['http://127.0.0.1:3000', 'http://localhost:3000', 'https://api.hamyarwellness.com'];
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');

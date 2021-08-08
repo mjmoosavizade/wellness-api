@@ -112,6 +112,7 @@ exports.getOneCategories = (req, res) => {
 };
 
 exports.updateQuiz = (req, res) => {
+    console.log('check')
     const updateOps = {};
     for (const [objKey, value] of Object.entries(req.body)) {
         updateOps[objKey] = value;

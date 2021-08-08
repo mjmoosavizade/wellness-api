@@ -40,7 +40,7 @@ const api = process.env.API_URL;
 
 app.use(cors());
 
-app.options('*', cors());
+// app.options('*', cors());
 
 //Middleware
 app.use(express.urlencoded({ extended: true }));

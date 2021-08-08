@@ -38,9 +38,13 @@ const api = process.env.API_URL;
 //     next();
 // });
 
-app.use(cors());
+// app.use(cors());
 
 // app.options('*', cors());
+
+res.header('Access-Control-Allow-Origin', '*');
+res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
+res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
 
 //Middleware
 app.use(express.urlencoded({ extended: true }));

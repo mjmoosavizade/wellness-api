@@ -12,7 +12,8 @@ const storage = multer.diskStorage({
         });
     },
     filename: function(req, file, cb) {
-        cb(null, Date.now() + file.originalname);
+        const extension = file.mimetype.split('/')[1];
+        cb(null, Date.now() + `.${extension}`);
     }
 });
 

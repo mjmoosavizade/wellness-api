@@ -59,9 +59,9 @@ exports.getAllCategories = (req, res) => {
                 res.status(404).json({ success: false, message: "No content" });
             }
         })
-        // .catch(err => {
-        //     res.status(404).json({ success: false, error: err });
-        // })
+    // .catch(err => {
+    //     res.status(404).json({ success: false, error: err });
+    // })
 };
 
 exports.getOneCategories = (req, res) => {
@@ -114,10 +114,16 @@ exports.getOneCategories = (req, res) => {
 exports.updateQuiz = (req, res) => {
     console.log('check')
     const updateOps = {};
-    for (const [objKey, value] of Object.entries(req.body)) {
-        updateOps[objKey] = value;
+    const quiz = {
+        quizCategory: req.body.quizCategory,
+        quizTitle: req.body.quizTitle,
+        quizIcon: req.files.quizIcon[0].path,
+        quizAudio: req.files.quizAudio[0].path,
+        quizDimension: req.body.quizDimension,
+        quizDescript: req.body.quizDescript,
+        active: req.body.active,
     }
-    Quiz.findByIdAndUpdate({ _id: req.params.id }, { $set: updateOps }, { new: true })
+    Quiz.findByIdAndUpdate({ _id: req.params.id }, { $set: quiz }, { new: true })
         .exec()
         .then((doc) => {
             res.status(200).json({ success: true, data: doc });

@@ -6,13 +6,13 @@ const multer = require('multer');
 const fs = require('fs');
 
 const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
+    destination: function (req, file, cb) {
         fs.mkdir('./uploads/quizzes', (err) => {
             cb(null, './uploads/quizzes');
         });
     },
-    filename: function(req, file, cb) {
-        const extension = file.mimetype.split('/')[1];
+    filename: function (req, file, cb) {
+        const extension = file.mimetype === 'audio/mpeg' ? "mp3" : "png";
         cb(null, Date.now() + `.${extension}`);
     }
 });

@@ -112,16 +112,15 @@ exports.getOneCategories = (req, res) => {
 };
 
 exports.updateQuiz = (req, res) => {
-    console.log('check')
     const updateOps = {};
     for (const [objKey, value] of Object.entries(req.body)) {
         updateOps[objKey] = value;
     }
-    if (req.files.quizAudio[0].path) {
-        updateOps[quizAudio] = req.files.quizAudio[0].path
+    if (req.files.quizAudio) {
+        updateOps["quizAudio"] = req.files.quizAudio[0].path
     }
-    if (req.files.quizAudio[0].path) {
-        updateOps[quizIcon] = req.files.quizIcon[0].path
+    if (req.files.quizIcon) {
+        updateOps["quizIcon"] = req.files.quizIcon[0].path
     }
     Quiz.findByIdAndUpdate({ _id: req.params.id }, { $set: updateOps }, { new: true })
         .exec()

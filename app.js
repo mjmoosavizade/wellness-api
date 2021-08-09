@@ -85,7 +85,7 @@ process.on('warning', (warning) => {
     console.log(warning.stack);
 });
 app.get('/', (req, res) => {
-    return res.status(200).send('This is the root of my express application');
+    return res.status(404).send('');
 });
 app.use((error, req, res, next) => {
     res.status(error.status || 500);

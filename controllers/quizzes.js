@@ -114,16 +114,16 @@ exports.getOneCategories = (req, res) => {
 exports.updateQuiz = (req, res) => {
     console.log('check')
     const updateOps = {};
-    const quiz = {
-        quizCategory: (req.body.quizCategory ?  eq.body.quizCategory: ""),
-        quizTitle: req.body.quizTitle ?  eq.body.quizTitle : "",
-        quizIcon: req.files.quizIcon[0].path ? req.files.quizIcon[0].path : "",
-        quizAudio: req.files.quizAudio[0].path ?  req.files.quizAudio[0].path : "",
-        quizDimension: req.body.quizDimension ? req.body.quizDimension : "",
-        quizDescript: req.body.quizDescript ? req.body.quizDescript : "",
-        active: req.body.active ? req.body.active : "",
+    for (const [objKey, value] of Object.entries(req.body)) {
+        updateOps[objKey] = value;
     }
-    Quiz.findByIdAndUpdate({ _id: req.params.id }, { $set: quiz }, { new: true })
+    if (req.files.quizAudio[0].path) {
+        updateOps[quizAudio] = req.files.quizAudio[0].path
+    }
+    if (req.files.quizAudio[0].path) {
+        updateOps[quizIcon] = req.files.quizIcon[0].path
+    }
+    Quiz.findByIdAndUpdate({ _id: req.params.id }, { $set: updateOps }, { new: true })
         .exec()
         .then((doc) => {
             res.status(200).json({ success: true, data: doc });

@@ -115,13 +115,13 @@ exports.updateQuiz = (req, res) => {
     console.log('check')
     const updateOps = {};
     const quiz = {
-        quizCategory: req.body.quizCategory,
-        quizTitle: req.body.quizTitle,
-        quizIcon: req.files.quizIcon[0].path,
-        quizAudio: req.files.quizAudio[0].path,
-        quizDimension: req.body.quizDimension,
-        quizDescript: req.body.quizDescript,
-        active: req.body.active,
+        quizCategory: (req.body.quizCategory ?  eq.body.quizCategory: ""),
+        quizTitle: req.body.quizTitle ?  eq.body.quizTitle : "",
+        quizIcon: req.files.quizIcon[0].path ? req.files.quizIcon[0].path : "",
+        quizAudio: req.files.quizAudio[0].path ?  req.files.quizAudio[0].path : "",
+        quizDimension: req.body.quizDimension ? req.body.quizDimension : "",
+        quizDescript: req.body.quizDescript ? req.body.quizDescript : "",
+        active: req.body.active ? req.body.active : "",
     }
     Quiz.findByIdAndUpdate({ _id: req.params.id }, { $set: quiz }, { new: true })
         .exec()

@@ -50,7 +50,7 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan('tiny'));
-app.use(express.static(`${__dirname}/uploads`))
+app.use('/uploads', express.static(__dirname + '/uploads'));
 
 // app.use()
 
@@ -84,7 +84,9 @@ app.listen(4000, () => {
 process.on('warning', (warning) => {
     console.log(warning.stack);
 });
-
+app.get('/', (req, res) => {
+    return res.status(200).send('This is the root of my express application');
+});
 app.use((error, req, res, next) => {
     res.status(error.status || 500);
     res.json({

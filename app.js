@@ -1,7 +1,9 @@
 const express = require('express');
 const morgan = require('morgan')
+const http = require('http');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const socketio = require('socket.io');
 
 const productsRouter = require('./routes/products');
 const categoryRouter = require('./routes/categories');
@@ -14,37 +16,17 @@ const quizresultsRouter = require('./routes/quizResults');
 const testResultsRouter = require('./routes/testResults');
 
 const app = express();
+const server = http.createServer(app)
+const io = socketio(server);
 
 require('dotenv/config');
 
 const api = process.env.API_URL;
 
-// app.use(function (req, res, next) {
 
-//     // Website you wish to allow to connect
-//     res.setHeader('Access-Control-Allow-Origin', '*');
-
-//     // Request methods you wish to allow
-//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-//     // Request headers you wish to allow
-//     // res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-//     // Set to true if you need the website to include cookies in the requests sent
-//     // to the API (e.g. in case you use sessions)
-//     // res.setHeader('Access-Control-Allow-Credentials', true);
-
-//     // Pass to next layer of middleware
-//     next();
-// });
 
 app.use(cors());
 
-// app.options('*', cors());
-
-// app.header('Access-Control-Allow-Origin', '*');
-// app.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
-// app.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
 
 //Middleware
 app.use(express.urlencoded({ extended: true }));
@@ -76,8 +58,21 @@ mongoose.connect(process.env.CONNECTION_STRING, { useNewUrlParser: true, useFind
 mongoose.set('useCreateIndex', true);
 
 
+// Socket.io
+io.on('connection', socket => {
+    socket.emit('message', "welcome to chetcord");
+    socket.broadcast.emit('message', 'a user has joined the chat.');
+    socket.on("disconnect", () => {
+        io.emit('message', 'a user has left the chat');
+    });
+    socket.on('chatMessage', msg => {
+        io.emit('message', msg)
+    })
+});
+
+
 //Server    
-app.listen(4000, () => {
+server.listen(4000, () => {
     console.log('Server running localhost:4000')
 })
 

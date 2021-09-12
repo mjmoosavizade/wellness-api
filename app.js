@@ -18,6 +18,12 @@ const testResultsRouter = require('./routes/testResults');
 const app = express();
 const server = http.createServer(app)
 const io = socketio(server);
+const io = require("socket.io")(httpServer, {
+    cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"],
+    }
+});
 
 require('dotenv/config');
 
@@ -25,7 +31,7 @@ const api = process.env.API_URL;
 
 
 
-app.use(cors());
+server.use(cors());
 
 
 //Middleware
@@ -59,6 +65,8 @@ mongoose.set('useCreateIndex', true);
 
 
 // Socket.io
+
+
 io.on('connection', socket => {
     socket.emit('message', "welcome to chetcord");
     socket.broadcast.emit('message', 'a user has joined the chat.');

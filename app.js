@@ -14,6 +14,7 @@ const quizRouter = require('./routes/quizzes');
 const quizQuestionsRouter = require('./routes/quizQuestions');
 const quizresultsRouter = require('./routes/quizResults');
 const testResultsRouter = require('./routes/testResults');
+const { Message } = require('./models/messages');
 
 const app = express();
 const server = http.createServer(app)
@@ -65,20 +66,43 @@ mongoose.set('useCreateIndex', true);
 
 // Socket.io
 
-
 io.on('connection', socket => {
-    socket.emit('message', "welcome to chetcord");
-    socket.broadcast.emit('message', 'a user has joined the chat.');
+    // socket.emit('message', "welcome to chetcord");
+    // socket.broadcast.emit('message', 'a user has joined the chat.');
     socket.on("disconnect", () => {
-        io.emit('message', 'a user has left the chat');
+        // io.emit('message', 'a user has left the chat');
     });
     socket.on('chatMessage', msg => {
+        console.log(msg)
+        const message = new Message({
+            message: msg.message,
+            user: msg.user,
+        });
+        message.save().then(res => {
+            console.log(res)
+        }).catch(err => {
+            console.log(err)
+        });
         io.emit('message', msg)
     })
 });
 
+app.use(`${api}/messages/:id`, (req, res) => {
+    Message.find({ user: req.params.id }).exec()
+        .then(result => {
+            if (result.length >= 1) {
+                res.status(200).json({ success: true, data: result });
+            } else {
+                res.status(404).json({ success: false, message: "No content" });
+            }
+        })
+        .catch(err => {
+            res.status(404).json({ success: false, message: "Error getting the messages" });
+        });
+});
+
 //Server    
-app.listen(4000, () => {
+server.listen(4000, () => {
     console.log('Server running localhost:4000')
 })
 

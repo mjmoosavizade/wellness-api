@@ -17,8 +17,7 @@ const testResultsRouter = require('./routes/testResults');
 
 const app = express();
 const server = http.createServer(app)
-// const io = socketio(server);
-const io = require("socket.io")(httpServer, {
+const io = require("socket.io")(server, {
     cors: {
         origin: "http://localhost:3000",
         methods: ["GET", "POST"],
@@ -31,27 +30,27 @@ const api = process.env.API_URL;
 
 
 
-server.use(cors());
+app.use(cors());
 
 
 //Middleware
-server.use(express.urlencoded({ extended: true }));
-server.use(express.json());
-server.use(morgan('tiny'));
-server.use('/uploads', express.static(__dirname + '/uploads'));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(morgan('tiny'));
+app.use('/uploads', express.static(__dirname + '/uploads'));
 
 // app.use()
 
 //Routers
-server.use(`${api}/products`, productsRouter);
-server.use(`${api}/categories`, categoryRouter);
-server.use(`${api}/users`, userRouter);
-server.use(`${api}/appointments`, appointmentRouter);
-server.use(`${api}/tickets`, ticketRouter);
-server.use(`${api}/quizzes`, quizRouter);
-server.use(`${api}/quiz/questions`, quizQuestionsRouter);
-server.use(`${api}/quiz/results`, quizresultsRouter);
-server.use(`${api}/test-results`, testResultsRouter);
+app.use(`${api}/products`, productsRouter);
+app.use(`${api}/categories`, categoryRouter);
+app.use(`${api}/users`, userRouter);
+app.use(`${api}/appointments`, appointmentRouter);
+app.use(`${api}/tickets`, ticketRouter);
+app.use(`${api}/quizzes`, quizRouter);
+app.use(`${api}/quiz/questions`, quizQuestionsRouter);
+app.use(`${api}/quiz/results`, quizresultsRouter);
+app.use(`${api}/test-results`, testResultsRouter);
 
 //Database Connection
 mongoose.connect(process.env.CONNECTION_STRING, { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true })
@@ -79,17 +78,17 @@ io.on('connection', socket => {
 });
 
 //Server    
-server.listen(4000, () => {
+app.listen(4000, () => {
     console.log('Server running localhost:4000')
 })
 
 process.on('warning', (warning) => {
     console.log(warning.stack);
 });
-server.get('/', (req, res) => {
+app.get('/', (req, res) => {
     return res.status(404).send('');
 });
-server.use((error, req, res, next) => {
+app.use((error, req, res, next) => {
     res.status(error.status || 500);
     res.json({
         error: {

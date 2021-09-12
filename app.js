@@ -35,23 +35,23 @@ server.use(cors());
 
 
 //Middleware
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(morgan('tiny'));
-app.use('/uploads', express.static(__dirname + '/uploads'));
+server.use(express.urlencoded({ extended: true }));
+server.use(express.json());
+server.use(morgan('tiny'));
+server.use('/uploads', express.static(__dirname + '/uploads'));
 
 // app.use()
 
 //Routers
-app.use(`${api}/products`, productsRouter);
-app.use(`${api}/categories`, categoryRouter);
-app.use(`${api}/users`, userRouter);
-app.use(`${api}/appointments`, appointmentRouter);
-app.use(`${api}/tickets`, ticketRouter);
-app.use(`${api}/quizzes`, quizRouter);
-app.use(`${api}/quiz/questions`, quizQuestionsRouter);
-app.use(`${api}/quiz/results`, quizresultsRouter);
-app.use(`${api}/test-results`, testResultsRouter);
+server.use(`${api}/products`, productsRouter);
+server.use(`${api}/categories`, categoryRouter);
+server.use(`${api}/users`, userRouter);
+server.use(`${api}/appointments`, appointmentRouter);
+server.use(`${api}/tickets`, ticketRouter);
+server.use(`${api}/quizzes`, quizRouter);
+server.use(`${api}/quiz/questions`, quizQuestionsRouter);
+server.use(`${api}/quiz/results`, quizresultsRouter);
+server.use(`${api}/test-results`, testResultsRouter);
 
 //Database Connection
 mongoose.connect(process.env.CONNECTION_STRING, { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true })
@@ -78,7 +78,6 @@ io.on('connection', socket => {
     })
 });
 
-
 //Server    
 server.listen(4000, () => {
     console.log('Server running localhost:4000')
@@ -87,10 +86,10 @@ server.listen(4000, () => {
 process.on('warning', (warning) => {
     console.log(warning.stack);
 });
-app.get('/', (req, res) => {
+server.get('/', (req, res) => {
     return res.status(404).send('');
 });
-app.use((error, req, res, next) => {
+server.use((error, req, res, next) => {
     res.status(error.status || 500);
     res.json({
         error: {

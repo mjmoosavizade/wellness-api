@@ -27,6 +27,7 @@
         "multer": "^1.4.2",
         "socket.io": "^4.2.0",
         "trez-sms-client": "^1.0.4",
-        "uuid": "^8.3.2"
+        "uuid": "^8.3.2",
+        "web-push": "^3.4.5"
     }
 }

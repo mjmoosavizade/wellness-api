@@ -3,7 +3,7 @@ const morgan = require('morgan')
 const http = require('http');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const socketio = require('socket.io');
+const webpush = require('web-push');
 
 const productsRouter = require('./routes/products');
 const categoryRouter = require('./routes/categories');
@@ -28,6 +28,8 @@ const io = require("socket.io")(server, {
 require('dotenv/config');
 
 const api = process.env.API_URL;
+const publicVapidKey = process.env.PUBLICـKEY;
+const privateVapidKey = process.env.PRIVATE_KEY;
 
 
 
@@ -86,6 +88,29 @@ io.on('connection', socket => {
         io.emit('message', msg)
     })
 });
+
+//Web-Push
+webpush.setVapidDetails(
+    "mailto:test@test.com",
+    publicVapidKey,
+    privateVapidKey
+);
+
+app.post("/subscribe", (req, res) => {
+    // Get pushSubscription object
+    const subscription = req.body;
+    // Send 201 - resource created
+    res.status(201).json({});
+
+    // Create payload
+    const payload = JSON.stringify({ title: "یادآوری" });
+
+    // Pass object into sendNotification
+    webpush
+        .sendNotification(subscription, payload)
+        .catch(err => console.error(err));
+});
+
 
 app.use(`${api}/messages/:id`, (req, res) => {
     Message.find({ user: req.params.id }).exec()

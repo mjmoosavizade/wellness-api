@@ -28,9 +28,8 @@ const io = require("socket.io")(server, {
 require('dotenv/config');
 
 const api = process.env.API_URL;
-const publicVapidKey = process.env.PUBLICـKEY;
+const publicVapidKey = 'BPBc8omBrJ-NtB_XcIW0S_QS4pVe_dNVECdvRiDWH3DsIQF2CshhYYUgep2U9DWlu7Huns5dzkrlypdRIrIgp8Q';
 const privateVapidKey = process.env.PRIVATE_KEY;
-
 
 
 app.use(cors());

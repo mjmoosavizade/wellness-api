@@ -96,7 +96,7 @@ webpush.setVapidDetails(
     privateVapidKey
 );
 
-app.post("/subscribe", (req, res) => {
+app.post("${api}/subscribe", (req, res) => {
     // Get pushSubscription object
     const subscription = req.body;
     // Send 201 - resource created

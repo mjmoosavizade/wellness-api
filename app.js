@@ -26,8 +26,6 @@ const io = require("socket.io")(server, {
 });
 
 
-app.use(express.urlencoded())
-app.use(express.json())
 
 
 require('dotenv/config');

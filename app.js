@@ -102,7 +102,7 @@ app.post(`${api}/subscribe`, (req, res) => {
     // Get pushSubscription object
     const subscription = req.body;
     console.log(subscription);
-    console.log(Object.keys(subscription)[0].endpoint);
+    console.log(subscription.endpoint);
     // Send 201 - resource created
     res.status(201).json({});
 
@@ -111,7 +111,7 @@ app.post(`${api}/subscribe`, (req, res) => {
 
     // Pass object into sendNotification
     webpush
-        .sendNotification(Object.keys(subscription)[0], payload)
+        .sendNotification(subscription, payload)
         .catch(err => console.error(err));
 });
 

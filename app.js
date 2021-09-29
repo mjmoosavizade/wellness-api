@@ -4,6 +4,7 @@ const http = require('http');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const webpush = require('web-push');
+const schedule = require('node-schedule');
 
 const productsRouter = require('./routes/products');
 const categoryRouter = require('./routes/categories');
@@ -20,7 +21,7 @@ const app = express();
 const server = http.createServer(app)
 const io = require("socket.io")(server, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: "https://hamyarwellness.com",
         methods: ["GET", "POST"],
     }
 });
@@ -110,9 +111,13 @@ app.post(`${api}/subscribe`, (req, res) => {
     const payload = JSON.stringify({ title: "یادآوری" });
 
     // Pass object into sendNotification
-    webpush
-        .sendNotification(subscription, payload)
-        .catch(err => console.error(err));
+    const job = schedule.scheduleJob('42 * * * *', function () {
+        console.log('The answer to life, the universe, and everything!');
+        webpush
+            .sendNotification(subscription, payload)
+            .catch(err => console.error(err));
+    });
+
 });
 
 

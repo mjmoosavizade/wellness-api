@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const ttl = require('mongoose-ttl');
+// const ttl = require('mongoose-ttl');
 
 const userRole = ['admin', 'user', 'specialist', ]
 const gender = ['MALE', 'FEMALE', 'OTHER', ]
@@ -29,7 +29,7 @@ const ActivationCodeSchema = new mongoose.Schema({
     dateCreated: { type: Date, default: Date.now, expires: '10s' },
     authCode: { type: Number, }
 });
-ActivationCodeSchema.plugin(ttl, { ttl: 60000 * 2, interval: 5000 });
+// ActivationCodeSchema.plugin(ttl, { ttl: 60000 * 2, interval: 5000 });
 
 const ForgotPassSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },

@@ -111,10 +111,10 @@ app.post(`${api}/subscribe`, (req, res) => {
     const payload = JSON.stringify({ title: "یادآوری" });
 
     // Pass object into sendNotification
-    const job = schedule.scheduleJob('42 * * * *', function () {
+    const job = schedule.scheduleJob(`${subscription.minute} ${subscription.hour} * * *`, function () {
         console.log('The answer to life, the universe, and everything!');
         webpush
-            .sendNotification(subscription, payload)
+            .sendNotification(JSON.parse(subscription.subscription), payload)
             .catch(err => console.error(err));
     });
 

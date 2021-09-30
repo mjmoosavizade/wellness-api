@@ -113,12 +113,12 @@ app.post(`${api}/subscribe`, (req, res) => {
     const payload = JSON.stringify({ title: "یادآوری" });
 
     // Pass object into sendNotification
-    // const job = schedule.scheduleJob(`${subscription.minute} ${subscription.hour} * * *`, function () {
-    console.log('The answer to life, the universe, and everything!');
-    webpush
-        .sendNotification(JSON.parse(subscription.subscription), payload)
-        .catch(err => console.error(err));
-    // });
+    const job = schedule.scheduleJob(`${subscription.minute} ${subscription.hour} * * *`, function () {
+        console.log('The answer to life, the universe, and everything!');
+        webpush
+            .sendNotification(JSON.parse(subscription.subscription), payload)
+            .catch(err => console.error(err));
+    });
     var list = schedule.scheduledJobs;
     console.log(list)
 

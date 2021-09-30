@@ -103,7 +103,9 @@ app.post(`${api}/subscribe`, (req, res) => {
     // Get pushSubscription object
     const subscription = req.body;
     console.log(subscription);
-    console.log(subscription.endpoint);
+    console.log(subscription.minute);
+    console.log(subscription.hour);
+    console.log(JSON.parse(subscription.subscription));
     // Send 201 - resource created
     res.status(201).json({});
 
@@ -111,12 +113,12 @@ app.post(`${api}/subscribe`, (req, res) => {
     const payload = JSON.stringify({ title: "یادآوری" });
 
     // Pass object into sendNotification
-    const job = schedule.scheduleJob(`${subscription.minute} ${subscription.hour} * * *`, function () {
+    // const job = schedule.scheduleJob(`${subscription.minute} ${subscription.hour} * * *`, function () {
         console.log('The answer to life, the universe, and everything!');
         webpush
             .sendNotification(JSON.parse(subscription.subscription), payload)
             .catch(err => console.error(err));
-    });
+    // });
 
 });
 

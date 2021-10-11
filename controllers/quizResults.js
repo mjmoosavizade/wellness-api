@@ -52,7 +52,7 @@ exports.getResults = (req, res) => {
 
 exports.getUserResults = (req, res) => {
     QuizResult.find({ user: req.query.user, quiz: req.query.quiz })
-        .populate('quiz')
+        .populate('quiz user')
         .then(results => {
             if (results < 1) {
                 res.status(404).json({ success: false, message: 'No Content' });

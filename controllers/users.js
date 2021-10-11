@@ -77,7 +77,7 @@ exports.deleteUser = (req, res) => {
 
 exports.login = (req, res) => {
     User.findOne({ phone: req.body.phone })
-        .select("active _id passwordHash phone")
+        .select("active _id passwordHash phone userType")
         .exec()
         .then((user) => {
             if (user) {

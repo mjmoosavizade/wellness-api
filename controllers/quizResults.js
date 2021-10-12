@@ -17,8 +17,8 @@ exports.createResult = (req, res) => {
             }
             const quizResult = new QuizResult(createObj);
             quizResult.save().then(result => {
-                    res.status(201).json({ message: 'success', data: result })
-                })
+                res.status(201).json({ message: 'success', data: result })
+            })
                 .catch(err => {
                     res.status(500).json({
                         error: err,
@@ -63,3 +63,17 @@ exports.getUserResults = (req, res) => {
             res.status(500).json({ success: false, error: results });
         })
 };
+
+exports.updateResult = (req, res) => {
+    const updateOps = {};
+    for (const [objKey, value] of Object.entries(req.body)) {
+        updateOps[objKey] = value;
+    }
+    QuizResult.updateOne({ _id: req.params.id }, { $set: updateOps }, { new: true }).exec()
+        .then((doc) => {
+            res.status(200).json({ success: true, data: doc });
+        })
+        .catch((err) => {
+            res.status(500).json({ success: false, message: "error updating the ticket", error: err });
+        });
+}

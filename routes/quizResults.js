@@ -9,4 +9,6 @@ router.get('/', checkAuth, quizResultsController.getResults);
 
 router.get('/:user', checkAuth, quizResultsController.getUserResults);
 
+router.patch('/:id', checkAuth, quizResultsController.updateResult)
+
 module.exports = router;

@@ -30,7 +30,7 @@ const io = require("socket.io")(server, {
 
 
 require('dotenv/config');
-
+process.env.TZ = "Asia/Tehran";
 const api = process.env.API_URL;
 const publicVapidKey = 'BPBc8omBrJ-NtB_XcIW0S_QS4pVe_dNVECdvRiDWH3DsIQF2CshhYYUgep2U9DWlu7Huns5dzkrlypdRIrIgp8Q';
 const privateVapidKey = process.env.PRIVATE_KEY;
@@ -107,7 +107,7 @@ app.post(`${api}/subscribe`, (req, res) => {
     console.log(subscription.hour);
     console.log(JSON.parse(subscription.subscription));
     // Send 201 - resource created
-    res.status(201).json({});
+    
 
     // Create payload
     const payload = JSON.stringify({ title: "یادآوری" });
@@ -121,6 +121,7 @@ app.post(`${api}/subscribe`, (req, res) => {
     });
     var list = schedule.scheduledJobs;
     console.log(list)
+    res.status(201).json({});
 
 });
 

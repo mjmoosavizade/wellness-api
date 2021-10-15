@@ -27,6 +27,19 @@ exports.createProduct = (req, res) => {
     });
 };
 
+exports.getAProduct = (req, res) => {
+    Product.find({ _id: req.params.id }).then(productList => {
+        console.log(productList)
+        if (productList.length < 1) {
+            res.status(404).json({ success: false, message: 'No Content' });
+        } else {
+            res.status(200).json({ success: true, data: productList[0] });
+        }
+    }).catch(err => {
+        res.status(500).json({ success: false, message: err })
+    });
+}
+
 exports.searchProducts = (req, res) => {
     console.log(req.query)
     Product.find(req.query).lean().then(productList => {

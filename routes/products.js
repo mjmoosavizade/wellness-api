@@ -32,6 +32,8 @@ const upload = multer({
 
 router.get(`/`, productController.getAllProducts);
 
+router.get(`/:id`, productController.getAProduct);
+
 router.post(`/`, upload.single('image'), productController.createProduct);
 
 router.get(`/search`, productController.searchProducts);
@@ -42,6 +44,6 @@ router.delete(`/cart/:id`, checkAuth, productController.deleteCartItem);
 
 router.patch(`/cart/:id`, checkAuth, productController.editCartItem);
 
-router.get(`/cart/:id`, checkAuth, productController.getMyCart);
+router.get(`/cart/`, checkAuth, productController.getMyCart);
 
 module.exports = router;

@@ -151,12 +151,12 @@ process.on('warning', (warning) => {
 app.get('/', (req, res) => {
     return res.status(404).send('');
 });
-app.use((error, req, res, next) => {
-    res.status(error.status || 500);
-    res.json({
-        error: {
-            error: error.message,
-            message: "Significant Error",
-        },
-    });
-});
+// app.use((error, req, res, next) => {
+//     res.status(error.status || 500);
+//     res.json({
+//         error: {
+//             error: error.message,
+//             message: "Significant Error",
+//         },
+//     });
+// });

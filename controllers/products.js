@@ -50,9 +50,9 @@ exports.searchProducts = (req, res) => {
             res.status(200).json({ success: true, data: productList });
         }
     })
-    .catch(err => {
-        res.status(500).json({ success: false, message: err })
-    });
+        .catch(err => {
+            res.status(500).json({ success: false, message: err })
+        });
 };
 
 exports.newCart = (req, res) => {
@@ -95,7 +95,7 @@ exports.editCartItem = (req, res) => {
 }
 
 exports.getMyCart = (req, res) => {
-    CartProduct.find({ user: req.userData.userId })
+    CartProduct.find({ user: req.userData.userId }).populate('item')
         .exec()
         .then(result => {
             res.status(200).json({ success: true, data: result });

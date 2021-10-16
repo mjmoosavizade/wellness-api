@@ -95,12 +95,12 @@ exports.editCartItem = (req, res) => {
 }
 
 exports.getMyCart = (req, res) => {
-    CartProduct.find({ user: req.userData.userId }).populate('item')
+    CartProduct.find({ user: req.userData.userId }).populate('product')
         .exec()
         .then(result => {
             res.status(200).json({ success: true, data: result });
         })
-        .catch(err => {
-            res.status(500).json({ success: false, message: "error getting the user", error: err })
-        })
+        // .catch(err => {
+        //     res.status(500).json({ success: false, message: "error getting the cart", error: err })
+        // })
 }

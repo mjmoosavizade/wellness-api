@@ -34,8 +34,6 @@ router.get(`/`, productController.getAllProducts);
 
 router.get(`/search`, productController.searchProducts);
 
-router.get(`/:id`, productController.getAProduct);
-
 router.post(`/`, upload.single('image'), productController.createProduct);
 
 router.post(`/cart`, checkAuth, productController.newCart);
@@ -45,6 +43,8 @@ router.get(`/cart/`, checkAuth, productController.getMyCart);
 router.delete(`/cart/:id`, checkAuth, productController.deleteCartItem);
 
 router.patch(`/cart/:id`, checkAuth, productController.editCartItem);
+
+router.get(`/:id`, productController.getAProduct);
 
 
 module.exports = router;

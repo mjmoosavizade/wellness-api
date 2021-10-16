@@ -49,7 +49,8 @@ exports.searchProducts = (req, res) => {
         } else {
             res.status(200).json({ success: true, data: productList });
         }
-    }).catch(err => {
+    })
+    .catch(err => {
         res.status(500).json({ success: false, message: err })
     });
 };

@@ -58,7 +58,7 @@ exports.searchProducts = (req, res) => {
 exports.newCart = (req, res) => {
     const cart = new CartProduct({
         user: req.userData.userId,
-        item: req.body.item,
+        product: req.body.product,
         qty: req.body.qty,
     });
     cart.save().then(createdProduct => {
@@ -95,12 +95,13 @@ exports.editCartItem = (req, res) => {
 }
 
 exports.getMyCart = (req, res) => {
-    CartProduct.find({ user: req.userData.userId }).populate('product')
+    CartProduct.find({ user: req.userData.userId })
+        .populate('product')
         .exec()
         .then(result => {
             res.status(200).json({ success: true, data: result });
         })
-        // .catch(err => {
-        //     res.status(500).json({ success: false, message: "error getting the cart", error: err })
-        // })
+        .catch(err => {
+            res.status(500).json({ success: false, message: "error getting the cart", error: err })
+        })
 }

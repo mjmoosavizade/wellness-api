@@ -25,7 +25,20 @@ exports.signup = (req, res) => {
                     user.save().then(doc => {
                         console.log(doc.phone)
 
-                        res.status(201).json({ success: true, message: 'User created', user: doc });
+                        jwt.sign({ phone: user.phone, userId: user.id, userType: user.userType },
+                            process.env.JWT_KEY, {
+                            expiresIn: "48h",
+                        },
+                            (err, token) => {
+                                if (err) {
+                                    return res.status(500).json({ success: false, message: "Authorization failed", error: err });
+                                } else if (token) {
+                                    return res
+                                        .status(200)
+                                        .json({ success: true, message: "Authorization succeeded", token: token, user: user });
+                                }
+                            }
+                        );
                     })
                         .catch(err => {
                             res.status(500).json({ success: false, message: 'Signup failure', error: err });
@@ -336,5 +349,5 @@ exports.changeForgottenPass = (req, res) => {
 }
 
 exports.checkLogin = (req, res) => {
-    return (res.status(200).json({ success: true , msg: "you are logged in"}))
+    return (res.status(200).json({ success: true, msg: "you are logged in" }))
 }

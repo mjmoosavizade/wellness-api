@@ -2,7 +2,7 @@ const { Product } = require('../models/products');
 const { CartProduct } = require('../models/cart');
 
 exports.getAllProducts = (req, res) => {
-
+    
 };
 
 exports.createProduct = (req, res) => {

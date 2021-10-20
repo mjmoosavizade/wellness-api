@@ -223,8 +223,12 @@ exports.getMyProfile = (req, res) => {
 exports.updateMyProfile = (req, res) => {
     const updateOps = {};
     for (const [objKey, value] of Object.entries(req.body)) {
-        if (objKey != "passwordHash" || objKey != "active" || objKey != "phone")
+        if (objKey != "passwordHash" || objKey != "active" || objKey != "phone") {
             updateOps[objKey] = value;
+        } 
+        if (req.files.image) {
+            updateOps["image"] = req.files.image.path
+        }
     }
     User.findByIdAndUpdate({ _id: req.userData.userId }, { $set: updateOps }, { new: true })
         .exec()

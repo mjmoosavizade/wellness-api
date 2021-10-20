@@ -3,6 +3,35 @@ const router = express.Router();
 const userController = require("../controllers/users");
 const checkAuth = require("../middleware/chcek-auth");
 const checkAdmin = require("../middleware/check-admin");
+const multer = require('multer');
+
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/users');
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + file.originalname);
+    }
+});
+
+const fileFilter = (req, file, cb) => {
+    // reject a file
+    if (file.mimetype === 'image/jpeg') {
+        cb(null, true);
+    } else {
+        cb(null, false);
+    }
+};
+
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 * 10
+    },
+    fileFilter: fileFilter
+});
+
 
 router.post('/signup', userController.signup);
 
@@ -16,7 +45,7 @@ router.delete('/:id', checkAuth, checkAdmin, userController.deleteUser);
 
 router.post('/login', userController.login);
 
-router.patch('/updateMyProfile', checkAuth, userController.updateMyProfile);
+router.patch('/updateMyProfile', upload.single('image'), checkAuth, userController.updateMyProfile);
 
 router.patch('/updatePassword', checkAuth, userController.updatePassword);
 

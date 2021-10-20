@@ -8,6 +8,7 @@ const UserSchema = new mongoose.Schema({
     firstname: { type: String, required: false },
     lastname: { type: String, required: false },
     email: { type: String, required: false, },
+    image: { type: String, required: false, },
     passwordHash: { type: String, required: true },
     jobTitle: { type: String, },
     phone: {

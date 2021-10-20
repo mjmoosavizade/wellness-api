@@ -222,13 +222,14 @@ exports.getMyProfile = (req, res) => {
 
 exports.updateMyProfile = (req, res) => {
     const updateOps = {};
+    console.log(req.file);
     for (const [objKey, value] of Object.entries(req.body)) {
         if (objKey != "passwordHash" || objKey != "active" || objKey != "phone") {
             updateOps[objKey] = value;
-        } 
-        if (req.files.image) {
-            updateOps["image"] = req.files.image.path
         }
+    }
+    if (req.file) {
+        updateOps["image"] = req.file.path
     }
     User.findByIdAndUpdate({ _id: req.userData.userId }, { $set: updateOps }, { new: true })
         .exec()

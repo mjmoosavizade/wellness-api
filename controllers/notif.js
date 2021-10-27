@@ -90,7 +90,7 @@ exports.activeAllNotifs = (req, res) => {
                 webpush
                     .sendNotification(JSON.parse(result.subscription), payload)
                     .catch(err => console.error(err));
-    
+
             });
             return res.status(200).json({ success: true, data: result });
         } else {

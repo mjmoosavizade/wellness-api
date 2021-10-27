@@ -28,18 +28,20 @@ exports.getMyNotifs = (req, res) => {
 
 
 exports.createNotif = (req, res) => {
+    const subscription = req.body;
+    console.log(subscription.minute)
     const notif = new Notif({
         user: req.userData.userId,
-        endpoint: req.body.endpoint,
-        minute: req.body.minute,
-        houre: req.body.houre,
+        endpoint: subscription.subscription,
+        minute: subscription.minute,
+        hour: subscription.hour,
     });
     notif.save().then(result => {
         // Get pushSubscription object
         const subscription = req.body;
-        console.log(subscription);
-        console.log(subscription.minute);
-        console.log(subscription.hour);
+        // console.log(subscription);
+        // console.log(subscription.minute);
+        // console.log(subscription.hour);
         // Send 201 - resource created
 
 
@@ -57,23 +59,24 @@ exports.createNotif = (req, res) => {
         var list = schedule.scheduledJobs;
         console.log(list)
         res.status(201).json({ success: true, data: result })
-    }).catch(err => {
-        res.status(500).json({ success: 'false', message: "Error createing a notif", error: err })
     })
+    // .catch(err => {
+    //     res.status(500).json({ success: 'false', message: "Error createing a notif", error: err })
+    // })
 };
 
 
-exports.deleteTicket = (req, res) => {
-    Ticket.deleteOne({ _id: req.params.id })
+exports.deleteNotif = (req, res) => {
+    Notif.deleteOne({ _id: req.params.id })
         .exec()
-        .then(ticket => {
-            if (ticket) {
-                res.status(202).json({ success: true, message: 'Ticket deleted successfuly ' })
+        .then(notif => {
+            if (notif) {
+                res.status(202).json({ success: true, message: 'Notif deleted successfuly ' })
             } else {
-                res.status(404).json({ success: false, message: 'Ticket id incorect' })
+                res.status(404).json({ success: false, message: 'Notif id incorect' })
             }
         })
-        .catch(err => {
-            res.status(500).json({ success: true, message: 'Error deleting ticket', error: err })
-        });
+        // .catch(err => {
+        //     res.status(500).json({ success: true, message: 'Error deleting Notif', error: err })
+        // });
 };

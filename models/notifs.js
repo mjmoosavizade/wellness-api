@@ -7,4 +7,4 @@ const notifSchema = mongoose.Schema({
     hour: { type: String, required: true }
 });
 
-exports.NotifSchema = mongoose.model('Notif', notifSchema);
+exports.Notif = mongoose.model('Notif', notifSchema);

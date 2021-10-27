@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const quizQuestionsController = require('../controllers/notif');
+const notifController = require('../controllers/notif');
 const checkAuth = require('../middleware/chcek-auth');
 
-router.post('/', checkAuth, quizQuestionsController.createNotif);
+router.post('/', checkAuth, notifController.createNotif);
 
-router.get('/', checkAuth, quizQuestionsController.getMyNotifs);
+router.get('/', checkAuth, notifController.getMyNotifs);
 
-router.delete('/', checkAuth, quizQuestionsController.deleteTicket);
+router.delete('/:id', checkAuth, notifController.deleteNotif);
 
 module.exports = router;

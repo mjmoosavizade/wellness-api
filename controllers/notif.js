@@ -39,11 +39,6 @@ exports.createNotif = (req, res) => {
     notif.save().then(result => {
         // Get pushSubscription object
         const subscription = req.body;
-        // console.log(subscription);
-        // console.log(subscription.minute);
-        // console.log(subscription.hour);
-        // Send 201 - resource created
-
 
         // Create payload
         const payload = JSON.stringify({ title: "یادآوری" });
@@ -60,9 +55,9 @@ exports.createNotif = (req, res) => {
         console.log(list)
         res.status(201).json({ success: true, data: result })
     })
-    // .catch(err => {
-    //     res.status(500).json({ success: 'false', message: "Error createing a notif", error: err })
-    // })
+        .catch(err => {
+            res.status(500).json({ success: 'false', message: "Error createing a notif", error: err })
+        })
 };
 
 
@@ -76,7 +71,33 @@ exports.deleteNotif = (req, res) => {
                 res.status(404).json({ success: false, message: 'Notif id incorect' })
             }
         })
-        // .catch(err => {
-        //     res.status(500).json({ success: true, message: 'Error deleting Notif', error: err })
-        // });
+        .catch(err => {
+            res.status(500).json({ success: true, message: 'Error deleting Notif', error: err })
+        });
+};
+
+exports.cancellAllNotifs = (req, res) => {
+    for (const job in schedule.scheduledJobs) schedule.cancelJob(job);
+    res.status(202).json({ success: true, message: 'All jobs cancelled' })
+
+};
+
+exports.activeAllNotifs = (req, res) => {
+    Notif.find({ user: req.userData.userId }).then(result => {
+        if (result.length >= 1) {
+            const job = schedule.scheduleJob(`${result.minute} ${result.hour} * * *`, function () {
+                console.log('The answer to life, the universe, and everything!');
+                webpush
+                    .sendNotification(JSON.parse(result.subscription), payload)
+                    .catch(err => console.error(err));
+    
+            });
+            return res.status(200).json({ success: true, data: result });
+        } else {
+            return res.status(404).json({ success: false, message: "No notifications" });
+        }
+    }).catch(err => {
+        return res.status(500).json({ success: false, message: "Error getting notifications", error: err });
+    });
+
 };

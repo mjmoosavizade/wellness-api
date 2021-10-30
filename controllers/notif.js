@@ -29,9 +29,10 @@ exports.getMyNotifs = (req, res) => {
 
 exports.createNotif = (req, res) => {
     const subscription = req.body;
-    console.log(subscription.minute)
+    console.log(subscription)
     const notif = new Notif({
         user: req.userData.userId,
+        body: subscription.body,
         endpoint: subscription.subscription,
         minute: subscription.minute,
         hour: subscription.hour,
@@ -41,11 +42,10 @@ exports.createNotif = (req, res) => {
         const subscription = req.body;
 
         // Create payload
-        const payload = JSON.stringify({ title: "یادآوری" });
+        const payload = JSON.stringify({ title: "Push Test", payload: subscription.body });
 
         // Pass object into sendNotification
         const job = schedule.scheduleJob(`${subscription.minute} ${subscription.hour} * * *`, function () {
-            console.log('The answer to life, the universe, and everything!');
             webpush
                 .sendNotification(JSON.parse(subscription.subscription), payload)
                 .catch(err => console.error(err));
@@ -55,9 +55,9 @@ exports.createNotif = (req, res) => {
         console.log(list)
         res.status(201).json({ success: true, data: result })
     })
-        .catch(err => {
-            res.status(500).json({ success: 'false', message: "Error createing a notif", error: err })
-        })
+    // .catch(err => {
+    //     res.status(500).json({ success: 'false', message: "Error createing a notif", error: err })
+    // })
 };
 
 
@@ -85,10 +85,11 @@ exports.cancellAllNotifs = (req, res) => {
 exports.activeAllNotifs = (req, res) => {
     Notif.find({ user: req.userData.userId }).then(result => {
         if (result.length >= 1) {
+            const payload = JSON.stringify({ title: "Push Test", payload: subscription.body });
             const job = schedule.scheduleJob(`${result.minute} ${result.hour} * * *`, function () {
                 console.log('The answer to life, the universe, and everything!');
                 webpush
-                    .sendNotification(JSON.parse(result.subscription), payload)
+                    .sendNotification(JSON.parse(result.subscription), payload, subscription.body)
                     .catch(err => console.error(err));
 
             });
@@ -96,8 +97,9 @@ exports.activeAllNotifs = (req, res) => {
         } else {
             return res.status(404).json({ success: false, message: "No notifications" });
         }
-    }).catch(err => {
-        return res.status(500).json({ success: false, message: "Error getting notifications", error: err });
-    });
+    })
+        .catch(err => {
+            return res.status(500).json({ success: false, message: "Error getting notifications", error: err });
+        });
 
 };

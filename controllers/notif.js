@@ -29,7 +29,7 @@ exports.getMyNotifs = (req, res) => {
 
 exports.createNotif = (req, res) => {
     const subscription = req.body;
-    console.log(subscription.body)
+    console.log(JSON.parse(subscription.body))
     const notif = new Notif({
         user: req.userData.userId,
         body: subscription.body,
@@ -42,7 +42,7 @@ exports.createNotif = (req, res) => {
         const subscription = req.body;
 
         // Create payload
-        const payload = JSON.stringify({ title: "یادآوری", payload: JSON.parse(subscription.body) });
+        const payload = JSON.stringify({ title: "یادآوری", payload: { body: subscription.body } });
 
         // Pass object into sendNotification
         const job = schedule.scheduleJob(`${subscription.minute} ${subscription.hour} * * *`, function () {

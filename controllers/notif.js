@@ -43,6 +43,7 @@ exports.createNotif = (req, res) => {
 
         // Create payload
         const payload = JSON.stringify({ title: "یادآوری", payload: { body: subscription.body } });
+        console.log(payload)
 
         // Pass object into sendNotification
         const job = schedule.scheduleJob(`${subscription.minute} ${subscription.hour} * * *`, function () {

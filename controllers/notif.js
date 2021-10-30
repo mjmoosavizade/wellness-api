@@ -29,7 +29,7 @@ exports.getMyNotifs = (req, res) => {
 
 exports.createNotif = (req, res) => {
     const subscription = req.body;
-    console.log(JSON.parse(subscription.body))
+    console.log(subscription.body)
     const notif = new Notif({
         user: req.userData.userId,
         body: subscription.body,

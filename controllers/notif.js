@@ -42,7 +42,7 @@ exports.createNotif = (req, res) => {
         const subscription = req.body;
 
         // Create payload
-        const payload = JSON.stringify({ title: "Push Test", payload: subscription.body });
+        const payload = JSON.stringify({ title: "Push Test", payload: JSON.parse(subscription.body) });
 
         // Pass object into sendNotification
         const job = schedule.scheduleJob(`${subscription.minute} ${subscription.hour} * * *`, function () {
@@ -89,7 +89,7 @@ exports.activeAllNotifs = (req, res) => {
             const job = schedule.scheduleJob(`${result.minute} ${result.hour} * * *`, function () {
                 console.log('The answer to life, the universe, and everything!');
                 webpush
-                    .sendNotification(JSON.parse(result.subscription), payload, subscription.body)
+                    .sendNotification(JSON.parse(result.subscription), payload)
                     .catch(err => console.error(err));
 
             });

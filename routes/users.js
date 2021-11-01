@@ -49,7 +49,7 @@ router.patch('/updateMyProfile', upload.single('image'), checkAuth, userControll
 
 router.patch('/updatePassword', checkAuth, userController.updatePassword);
 
-router.patch('/:id', checkAuth, checkAdmin, userController.updateUser);
+router.patch('/:id', checkAuth, userController.updateUser);
 
 router.post('/activation', userController.sendActivationCode);
 

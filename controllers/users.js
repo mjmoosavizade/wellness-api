@@ -136,9 +136,9 @@ exports.updateUser = (req, res) => {
         .then((doc) => {
             res.status(200).json({ success: true, data: doc });
         })
-        .catch((err) => {
-            res.status(500).json({ success: false, message: "error updating the category", error: err });
-        });
+        // .catch((err) => {
+        //     res.status(500).json({ success: false, message: "error updating the category", error: err });
+        // });
 };
 
 exports.sendActivationCode = (req, res) => {

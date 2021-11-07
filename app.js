@@ -16,6 +16,8 @@ const quizQuestionsRouter = require('./routes/quizQuestions');
 const quizresultsRouter = require('./routes/quizResults');
 const testResultsRouter = require('./routes/testResults');
 const notifRouter = require('./routes/notif');
+const broadcastMessages = require('./routes/broadcastMessages');
+const supportMessages = require('./routes/supportMessages');
 const { Message } = require('./models/messages');
 
 const app = express();
@@ -59,6 +61,8 @@ app.use(`${api}/quiz/questions`, quizQuestionsRouter);
 app.use(`${api}/quiz/results`, quizresultsRouter);
 app.use(`${api}/test-results`, testResultsRouter);
 app.use(`${api}/notifs`, notifRouter);
+app.use(`${api}/broadcast-messages`, broadcastMessages);
+app.use(`${api}/support-messages`, supportMessages);
 
 //Database Connection
 mongoose.connect(process.env.CONNECTION_STRING, { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true })

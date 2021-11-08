@@ -2,8 +2,85 @@ const { BraodcastMessage } = require('../models/broadcastMessages');
 
 
 exports.getOneMessage = (req, res) => {
-    const id = req.params.id;
+    const id = req.userData.userId;
     BraodcastMessage.findById(id)
+        .exec()
+        .then((doc) => {
+            console.log()
+            if (doc) {
+                res.status(200).json({ success: true, data: doc });
+            } else {
+                res
+                    .status(404)
+                    .json({ success: false, message: "No valid entry found for provided ID" });
+            }
+        })
+        .catch((err) => {
+            res.status(500).json({
+                success: false,
+                message: "error fetching the message",
+                error: err
+            });
+        });
+};
+
+exports.getUnread = (req, res) => {
+    const id = req.userData.userId;
+    BraodcastMessage.find({
+        "read_by": { "$nin": [id] },
+        $or: [{ bradcastType: 'all' }, { reciever: id }]
+    })
+        .exec()
+        .then((doc) => {
+            console.log()
+            if (doc) {
+                res.status(200).json({ success: true, data: doc });
+            } else {
+                res
+                    .status(404)
+                    .json({ success: false, message: "No valid entry found for provided ID" });
+            }
+        })
+        .catch((err) => {
+            res.status(500).json({
+                success: false,
+                message: "error fetching the message",
+                error: err
+            });
+        });
+};
+
+exports.getRead = (req, res) => {
+    const id = req.userData.userId;
+    BraodcastMessage.find({
+        "read_by": { "$in": [id] },
+        $or: [{ bradcastType: 'all' }, { reciever: id }]
+    })
+        .exec()
+        .then((doc) => {
+            console.log()
+            if (doc) {
+                res.status(200).json({ success: true, data: doc });
+            } else {
+                res
+                    .status(404)
+                    .json({ success: false, message: "No valid entry found for provided ID" });
+            }
+        })
+        .catch((err) => {
+            res.status(500).json({
+                success: false,
+                message: "error fetching the message",
+                error: err
+            });
+        });
+};
+
+exports.getMyMessages = (req, res) => {
+    const id = req.params.id;
+    BraodcastMessage.find({
+        $or: [{ bradcastType: 'all' }, { reciever: id }]
+    })
         .exec()
         .then((doc) => {
             console.log()

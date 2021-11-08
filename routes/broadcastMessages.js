@@ -6,6 +6,12 @@ const checkAuth = require('../middleware/chcek-auth');
 
 router.get(`/`, checkAuth, messageController.getAllMessages);
 
+router.get(`/read`, checkAuth, messageController.getRead);
+
+router.get(`/my-messages`, checkAuth, messageController.getMyMessages);
+
+router.get(`/unread`, checkAuth, messageController.getUnread);
+
 router.get(`/:id`, checkAuth, messageController.getOneMessage);
 
 router.post(`/`, checkAuth, messageController.createMessage);

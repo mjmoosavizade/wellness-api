@@ -24,7 +24,7 @@ exports.getOneMessage = (req, res) => {
 };
 
 exports.getAllMessages = (req, res) => {
-    SupportMessages.find().then(messageList => {
+    SupportMessages.find().populate('sender').then(messageList => {
         if (!messageList) {
             res.status(204).json({ success: false, message: 'No Content' });
         } else {

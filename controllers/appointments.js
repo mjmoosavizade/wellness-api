@@ -46,12 +46,14 @@ exports.makeAppoinment = (req, res) => {
         date: req.body.date,
         time: req.body.time,
         length: req.body.length,
+        type: req.body.type,
         description: req.body.description,
         customer: req.userData.userId,
     });
     appointment.save().then(createdAppoinment => {
         res.status(201).json({ message: 'success', data: createdAppoinment })
-    }).catch(err => {
+    })
+    .catch(err => {
         res.status(500).json({
             error: err,
             success: false
@@ -85,4 +87,16 @@ exports.updateAppointment = (req, res) => {
         .catch((err) => {
             res.status(500).json({ success: false, message: "error updating the field", error: err });
         });
+};
+
+exports.checkAppoitment = (req, res) => {
+    console.log(req)
+    Appointment.find({ date: req.params.date })
+        .exec()
+        .then((doc) => {
+            res.status(200).json({ success: true, data: doc });
+        })
+        // .catch((err) => {
+        //     res.status(500).json({ success: false, message: "error updating the field", error: err });
+        // });
 };

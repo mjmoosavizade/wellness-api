@@ -25,7 +25,7 @@ exports.getOneAppointment = (req, res) => {
 };
 
 exports.getAllAppointments = (req, res) => {
-    Appointment.find().then(appointmentList => {
+    Appointment.find().populate('customer').then(appointmentList => {
         if (appointmentList < 1) {
             res.status(404).json({ success: false, message: 'No Content' });
         } else {
@@ -53,12 +53,12 @@ exports.makeAppoinment = (req, res) => {
     appointment.save().then(createdAppoinment => {
         res.status(201).json({ message: 'success', data: createdAppoinment })
     })
-    .catch(err => {
-        res.status(500).json({
-            error: err,
-            success: false
-        })
-    });
+        .catch(err => {
+            res.status(500).json({
+                error: err,
+                success: false
+            })
+        });
 };
 
 exports.deleteAppointment = (req, res) => {
@@ -96,7 +96,7 @@ exports.checkAppoitment = (req, res) => {
         .then((doc) => {
             res.status(200).json({ success: true, data: doc });
         })
-        // .catch((err) => {
-        //     res.status(500).json({ success: false, message: "error updating the field", error: err });
-        // });
+    // .catch((err) => {
+    //     res.status(500).json({ success: false, message: "error updating the field", error: err });
+    // });
 };

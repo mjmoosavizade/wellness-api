@@ -88,6 +88,7 @@ io.on('connection', socket => {
         const message = new Message({
             message: msg.message,
             user: msg.user,
+            sender: msg.sender,
         });
         message.save().then(res => {
             console.log(res)

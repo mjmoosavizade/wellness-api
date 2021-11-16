@@ -133,7 +133,21 @@ app.post(`${api}/subscribe`, (req, res) => {
 
 
 app.use(`${api}/messages/:id`, (req, res) => {
-    Message.find({ user: req.params.id }).exec()
+    Message.find({ user: req.params.id }).populate("user sender").exec()
+        .then(result => {
+            if (result.length >= 1) {
+                res.status(200).json({ success: true, data: result });
+            } else {
+                res.status(404).json({ success: false, message: "No content" });
+            }
+        })
+        .catch(err => {
+            res.status(404).json({ success: false, message: "Error getting the messages" });
+        });
+});
+
+app.use(`${api}/messages/`, (req, res) => {
+    Message.find().populate("user sender").exec()
         .then(result => {
             if (result.length >= 1) {
                 res.status(200).json({ success: true, data: result });

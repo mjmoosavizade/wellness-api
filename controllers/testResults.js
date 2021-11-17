@@ -42,7 +42,7 @@ exports.getOneResults = (req, res) => {
             if (result.length === 0) {
                 res.status(404).json({ status: false, message: "No content" });
             } else {
-                res.status(200).json({ status: true, data: result[0] });
+                res.status(200).json({ status: true, data: result });
             }
         })
 };

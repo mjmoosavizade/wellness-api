@@ -1,6 +1,7 @@
 const { TestResult } = require('../models/testResults');
 
 exports.createTestResult = (req, res) => {
+    console.log(req.file)
     const testResult = new TestResult({
         customer: req.body.customer,
         uploader: req.body.uploader,

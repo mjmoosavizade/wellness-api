@@ -34,7 +34,7 @@ exports.getAllResults = (req, res) => {
 
 exports.getOneResults = (req, res) => {
     TestResult
-        .find({ customer: req.params.customer })
+        .find({ customer: req.userData.userId })
         .select('-__v')
         .populate('customer', 'firstname lastname _id')
         .populate('uploader', 'firstname lastname _id')

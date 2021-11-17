@@ -35,7 +35,7 @@ router.post("/", checkAuth, upload.single('resultFile'), testResultsController.c
 
 router.get("/", checkAuth, testResultsController.getAllResults);
 
-router.get("/:id", checkAuth, testResultsController.getOneResults);
+router.get("/my", checkAuth, testResultsController.getOneResults);
 
 router.delete("/:id", checkAuth, testResultsController.deleteResult);
 

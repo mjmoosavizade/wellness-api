@@ -4,7 +4,8 @@ exports.createTestResult = (req, res) => {
     const testResult = new TestResult({
         customer: req.body.customer,
         uploader: req.body.uploader,
-        resultFile: req.file.path
+        testType: req.body.testType,
+        resultFile: req.file.path,
     });
     testResult
         .save()
@@ -32,7 +33,7 @@ exports.getAllResults = (req, res) => {
 
 exports.getOneResults = (req, res) => {
     TestResult
-        .find({ _id: req.params.id })
+        .find({ customer: req.params.customer })
         .select('-__v')
         .populate('customer', 'firstname lastname _id')
         .populate('uploader', 'firstname lastname _id')

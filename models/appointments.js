@@ -8,6 +8,7 @@ const AppointmentSchema = mongoose.Schema({
     type: { type: String, required: true, enum: type },
     customer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     description: { type: String },
+    status: { type: String, required: true, default: "pending" },
     dateCreated: { type: Date, default: Date.now }
 });
 

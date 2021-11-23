@@ -6,6 +6,8 @@ const checkAuth = require('../middleware/chcek-auth');
 
 router.post('/chack-date', checkAuth, appointmentController.checkAppoitment);
 
+router.get(`/get-unresponsed/:type`, checkAuth, appointmentController.geyUnresponsed);
+
 router.get(`/:id`, checkAuth, appointmentController.getOneAppointment);
 
 router.get(`/`, checkAuth, appointmentController.getAllAppointments);

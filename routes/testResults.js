@@ -5,10 +5,10 @@ const testResultsController = require('../controllers/testResults');
 const checkAuth = require('../middleware/chcek-auth');
 
 const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
+    destination: function (req, file, cb) {
         cb(null, 'uploads/test-results');
     },
-    filename: function(req, file, cb) {
+    filename: function (req, file, cb) {
         cb(null, Date.now() + file.originalname);
     }
 });
@@ -27,7 +27,7 @@ const upload = multer({
     limits: {
         fileSize: 1024 * 1024 * 10
     },
-    
+
 });
 
 

@@ -24,8 +24,33 @@ exports.getOneAppointment = (req, res) => {
         });
 };
 
+
+exports.geyUnresponsed = (req, res) => {
+    console.log(req.params.type)
+    Appointment.find({ response: null, status: "confirm", type: req.params.type })
+        .populate('customer')
+        .exec()
+        .then((doc) => {
+            if (doc) {
+                res.status(200).json({ success: true, data: doc });
+            } else {
+                res
+                    .status(404)
+                    .json({ success: false, message: "No valid entry found for provided ID" });
+            }
+        })
+        .catch((err) => {
+            console.log(err)
+            res.status(500).json({
+                success: false,
+                message: "error fetching the field",
+                error: err
+            });
+        });
+};
+
 exports.getAllAppointments = (req, res) => {
-    Appointment.find().populate('customer').then(appointmentList => {
+    Appointment.find().populate('customer response').then(appointmentList => {
         if (appointmentList < 1) {
             res.status(404).json({ success: false, message: 'No Content' });
         } else {
@@ -67,7 +92,7 @@ exports.deleteAppointment = (req, res) => {
             if (appointment) {
                 return res.status(200).json({ success: true, message: "The appointment is deleted" })
             } else {
-                return res.status(404).json({ success: false, message: "Appointment not found" });;
+                return res.status(404).json({ success: false, message: "Appointment not found" });
             }
         }).catch(err => {
             return res.status(500).json({ success: false, message: err })

@@ -9,6 +9,7 @@ const AppointmentSchema = mongoose.Schema({
     customer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     description: { type: String },
     status: { type: String, required: true, default: "pending" },
+    response: { type: mongoose.Schema.Types.ObjectId, ref: 'resultFile' },
     dateCreated: { type: Date, default: Date.now }
 });
 

@@ -78,6 +78,21 @@ exports.getQuizResult = (req, res) => {
         })
 };
 
+exports.getSpecQuiz = (req, res) => {
+    console.log(req.params.id)
+    QuizResult.find({ _id: req.params.id })
+        .populate('user', '-__v -passwordHash')
+        .then(results => {
+            if (results < 1) {
+                res.status(404).json({ success: false, message: 'No Content' });
+            } else {
+                res.status(200).json({ success: true, data: results });
+            }
+        }).catch(err => {
+            res.status(500).json({ success: false, error: results });
+        })
+};
+
 exports.updateResult = (req, res) => {
     const updateOps = {};
     for (const [objKey, value] of Object.entries(req.body)) {

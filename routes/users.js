@@ -47,9 +47,9 @@ router.post('/login', userController.login);
 
 router.put('/updateMyProfile', upload.single('image'), checkAuth, userController.updateMyProfile);
 
-router.patch('/updatePassword', checkAuth, userController.updatePassword);
+router.put('/updatePassword', checkAuth, userController.updatePassword);
 
-router.patch('/:id', checkAuth, checkAdmin, userController.updateUser);
+router.put('/:id', checkAuth, userController.updateUser);
 
 router.post('/activation', userController.sendActivationCode);
 

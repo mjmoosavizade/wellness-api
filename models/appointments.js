@@ -5,6 +5,7 @@ const type = ['general', 'special'];
 const AppointmentSchema = mongoose.Schema({
     date: { type: Date, required: true },
     time: { type: Number, required: true },
+    duration: { type: String, required: true },
     type: { type: String, required: true, enum: type },
     customer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     description: { type: String },

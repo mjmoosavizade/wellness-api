@@ -132,14 +132,14 @@ exports.updateUser = (req, res) => {
     for (const [objKey, value] of Object.entries(req.body)) {
         updateOps[objKey] = value;
     }
-    User.findByIdAndUpdate({ _id: req.params.id }, { $set: updateOps }, { new: true })
+    User.findOneAndUpdate({ _id: req.params.id }, { $set: updateOps }, { new: true })
         .exec()
         .then((doc) => {
             res.status(200).json({ success: true, data: doc });
         })
-        // .catch((err) => {
-        //     res.status(500).json({ success: false, message: "error updating the category", error: err });
-        // });
+        .catch((err) => {
+            res.status(500).json({ success: false, message: "error updating the category", error: err });
+        });
 };
 
 exports.sendActivationCode = (req, res) => {

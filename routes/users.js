@@ -45,7 +45,7 @@ router.delete('/:id', checkAuth, checkAdmin, userController.deleteUser);
 
 router.post('/login', userController.login);
 
-router.patch('/updateMyProfile', upload.single('image'), checkAuth, userController.updateMyProfile);
+router.put('/updateMyProfile', upload.single('image'), checkAuth, userController.updateMyProfile);
 
 router.patch('/updatePassword', checkAuth, userController.updatePassword);
 

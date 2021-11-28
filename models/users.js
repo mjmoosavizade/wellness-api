@@ -21,6 +21,9 @@ const UserSchema = new mongoose.Schema({
     gender: { type: String, enum: gender },
     address: { type: String, },
     landPhone: { type: String },
+    jobTitle: { type: String },
+    birthdate: { type: Date },
+    healthBackground: { type: String },
     active: { type: Boolean, default: false },
     dateCreated: { type: Date, default: Date.now },
 });

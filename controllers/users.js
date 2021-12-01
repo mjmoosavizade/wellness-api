@@ -231,6 +231,7 @@ exports.updateMyProfile = (req, res) => {
     }
     if (req.file) {
         updateOps["image"] = req.file.path
+        console.log(req.file.path)
     }
     User.findByIdAndUpdate({ _id: req.userData.userId }, { $set: updateOps }, { new: true })
         .exec()

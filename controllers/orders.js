@@ -1,9 +1,9 @@
-const { BraodcastMessage } = require('../models/broadcastMessages');
+const { Order } = require('../models/orders');
 
 
-exports.getOneMessage = (req, res) => {
+exports.getOneOrder = (req, res) => {
     const id = req.userData.userId;
-    BraodcastMessage.findById(id)
+    Order.findById(id)
         .exec()
         .then((doc) => {
             console.log()
@@ -24,12 +24,30 @@ exports.getOneMessage = (req, res) => {
         });
 };
 
-exports.getUnread = (req, res) => {
-    const id = req.userData.userId;
-    BraodcastMessage.find({
-        "read_by": { "$nin": [id] },
-        $or: [{ bradcastType: 'all' }, { reciever: id }]
-    })
+exports.getUndelivered = (req, res) => {
+    Order.find({ status: false })
+        .exec()
+        .then((doc) => {
+            console.log()
+            if (doc) {
+                res.status(200).json({ success: true, data: doc });
+            } else {
+                res
+                    .status(404)
+                    .json({ success: false, message: "No valid entry found" });
+            }
+        })
+        .catch((err) => {
+            res.status(500).json({
+                success: false,
+                message: "error fetching the order",
+                error: err
+            });
+        });
+};
+
+exports.getDelivered = (req, res) => {
+    Order.find({ status: true })
         .exec()
         .then((doc) => {
             console.log()
@@ -50,37 +68,9 @@ exports.getUnread = (req, res) => {
         });
 };
 
-exports.getRead = (req, res) => {
-    const id = req.userData.userId;
-    BraodcastMessage.find({
-        "read_by": { "$in": [id] },
-        $or: [{ bradcastType: 'all' }, { reciever: id }]
-    })
-        .exec()
-        .then((doc) => {
-            console.log()
-            if (doc) {
-                res.status(200).json({ success: true, data: doc });
-            } else {
-                res
-                    .status(404)
-                    .json({ success: false, message: "No valid entry found for provided ID" });
-            }
-        })
-        .catch((err) => {
-            res.status(500).json({
-                success: false,
-                message: "error fetching the message",
-                error: err
-            });
-        });
-};
-
-exports.getMyMessages = (req, res) => {
+exports.getMyOrders = (req, res) => {
     const id = req.params.id;
-    BraodcastMessage.find({
-        $or: [{ bradcastType: 'all' }, { reciever: id }]
-    })
+    Order.find({ _id: req.userData.userId })
         .exec()
         .then((doc) => {
             console.log()
@@ -95,14 +85,14 @@ exports.getMyMessages = (req, res) => {
         .catch((err) => {
             res.status(500).json({
                 success: false,
-                message: "error fetching the message",
+                message: "error fetching the orders",
                 error: err
             });
         });
 };
 
-exports.getAllMessages = (req, res) => {
-    BraodcastMessage.find().then(messageList => {
+exports.getAllOrders = (req, res) => {
+    Order.find().populate('user items.item').then(messageList => {
         if (!messageList) {
             res.status(204).json({ success: false, message: 'No Content' });
         } else {
@@ -114,20 +104,21 @@ exports.getAllMessages = (req, res) => {
 
 };
 
-exports.createMessage = (req, res) => {
+exports.createOrder = (req, res) => {
+    console.log(req.body)
     const createObj = {};
     for (const [objKey, value] of Object.entries(req.body)) {
         createObj[objKey] = value;
     }
-    const message = new BraodcastMessage({
-        title: req.body.title,
-        message: req.body.message,
-        bradcastType: req.body.bradcastType,
-        reciever: req.body.reciever,
+    console.log(req.body)
+    const order = new Order({
+        user: req.body.user,
+        items: req.body.items,
     });
-    message.save().then(cratedMessage => {
+    order.save().then(cratedMessage => {
         res.status(201).json(cratedMessage)
     }).catch(err => {
+        console.log(req.body)
         res.status(500).json({
             error: err,
             success: false
@@ -135,38 +126,39 @@ exports.createMessage = (req, res) => {
     });
 };
 
-exports.deleteMessage = (req, res) => {
-    BraodcastMessage.findByIdAndRemove(req.params.id)
-        .then(message => {
-            if (message) {
-                return res.status(200).json({ success: true, message: "The message is deleted" })
-            } else {
-                return res.status(404).json({ success: false, message: "message not found" });;
-            }
-        }).catch(err => {
-            return res.status(500).json({ success: false, message: err })
-        })
-};
+// exports.deleteMessage = (req, res) => {
+//     BraodcastMessage.findByIdAndRemove(req.params.id)
+//         .then(message => {
+//             if (message) {
+//                 return res.status(200).json({ success: true, message: "The message is deleted" })
+//             } else {
+//                 return res.status(404).json({ success: false, message: "message not found" });;
+//             }
+//         }).catch(err => {
+//             return res.status(500).json({ success: false, message: err })
+//         })
+// };
 
-exports.updateMessage = (req, res) => {
-    const updateOps = {};
-    for (const [objKey, value] of Object.entries(req.body)) {
-        updateOps[objKey] = value;
-    }
-    console.log(updateOps)
-    BraodcastMessage.findByIdAndUpdate({ _id: req.params.id }, { $set: updateOps }, { new: true })
-        .exec()
-        .then((doc) => {
-            res.status(200).json({ success: true, data: doc });
-        })
-        .catch((err) => {
-            res.status(500).json({ success: false, message: "error updating the message", error: err });
-        });
-};
+// exports.updateMessage = (req, res) => {
+//     const updateOps = {};
+//     for (const [objKey, value] of Object.entries(req.body)) {
+//         updateOps[objKey] = value;
+//     }
+//     console.log(updateOps)
+//     BraodcastMessage.findByIdAndUpdate({ _id: req.params.id }, { $set: updateOps }, { new: true })
+//         .exec()
+//         .then((doc) => {
+//             res.status(200).json({ success: true, data: doc });
+//         })
+//         .catch((err) => {
+//             res.status(500).json({ success: false, message: "error updating the message", error: err });
+//         });
+// };
 
-exports.readMessage = (req, res) => {
+exports.deliveredProduct = (req, res) => {
     console.log(req.userData.userId)
-    BraodcastMessage.findOneAndUpdate({ _id: req.params.id }, { $push: { read_by: req.userData.userId } }, { new: true })
+    const query = { "items._id": req.params.id }
+    Order.findOneAndUpdate(query, { "items.$.status": true }, { new: true })
         .exec()
         .then((doc) => {
             res.status(200).json({ success: true, data: doc });

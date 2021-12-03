@@ -67,13 +67,19 @@ exports.makeAppoinment = (req, res) => {
     for (const [objKey, value] of Object.entries(req.body)) {
         createObj[objKey] = value;
     }
+    let customer;
+    if (req.body.userId) {
+        customer = req.body.userId;
+    } else {
+        customer = req.userData.userId;
+    }
     const appointment = new Appointment({
         date: req.body.date,
         time: req.body.time,
         length: req.body.length,
         type: req.body.type,
         description: req.body.description,
-        customer: req.userData.userId,
+        customer: customer,
     });
     appointment.save().then(createdAppoinment => {
         res.status(201).json({ message: 'success', data: createdAppoinment })
